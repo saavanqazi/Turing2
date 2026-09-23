@@ -76,4 +76,6 @@ docker ps --format "{{.Names}}"
 harbor run -p tasks\gen-g205-wine-purchasing-margin-audit -a terminus-2 -m openai/glm-5.2 -k 8 -n 2 --env-file glm.env -o jobs --job-name glm-g205-r1 -y
 for /d %d in (jobs\glm-g205-r1\*) do @type "%d\verifier\reward.txt"
 ```
-Results: (pending)
+Results (2026-09-23): `glm-g205-r1`, terminus-2, -k 8 -n 4: **8/8 passed, all 1.0**, 0 exceptions, 27 m 32 s. Too easy. Oracle r1 not yet run (run it before r2 only if r2 is delayed; r2 supersedes it).
+
+Read: every data shape in r1 is announced by a policy sentence (repeated line, superseded lines, case, invoiced freight, closed allocation), so the model codes each clause as a rule. Round 2 must keep the rules unambiguous but stop announcing the shapes, and add shapes that only reading the files reveals.
