@@ -1,15 +1,15 @@
-supplier,freight_per_bottle,incoterm
-Napa Ridge Imports,1.50,FCA
-Napa Valley Co,1.50,FCA
-Bordeaux Negoce,2.20,EXW
-Left Bank Brokers,2.20,EXW
-Loire Direct,1.30,EXW
-Willamette Partners,1.10,FCA
-Finger Lakes Co,0.90,FCA
-Reims Cellars,2.60,EXW
-Mosel Handel,1.90,EXW
-Rioja Direct,1.40,EXW
-Rioja Direct SL,1.40,EXW
-Douro Trading,1.75,EXW
-Barossa Exports,2.40,FOB
-Tuscan Vines,1.80,EXW
+supplier,freight,freight_basis,case_size,incoterm
+Napa Ridge Imports,1.50,per bottle,12,FCA
+Napa Valley Co,1.50,per bottle,12,FCA
+Bordeaux Negoce,26.40,per case,12,EXW
+Left Bank Brokers,2.20,per bottle,6,EXW
+Loire Direct,1.30,per bottle,12,EXW
+Willamette Partners,1.10,per bottle,12,FCA
+Finger Lakes Co,0.90,per bottle,12,FCA
+Reims Cellars,2.60,per bottle,6,EXW
+Mosel Handel,1.90,per bottle,12,EXW
+Rioja Direct,1.40,per bottle,12,EXW
+Rioja Direct SL,1.40,per bottle,12,EXW
+Douro Trading,1.75,per bottle,6,EXW
+Barossa Exports,14.40,per case,6,FOB
+Tuscan Vines,21.60,per case,12,EXW

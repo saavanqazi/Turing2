@@ -79,3 +79,41 @@ for /d %d in (jobs\glm-g205-r1\*) do @type "%d\verifier\reward.txt"
 Results (2026-09-23): `glm-g205-r1`, terminus-2, -k 8 -n 4: **8/8 passed, all 1.0**, 0 exceptions, 27 m 32 s. Too easy. Oracle r1 not yet run (run it before r2 only if r2 is delayed; r2 supersedes it).
 
 Read: every data shape in r1 is announced by a policy sentence (repeated line, superseded lines, case, invoiced freight, closed allocation), so the model codes each clause as a rule. Round 2 must keep the rules unambiguous but stop announcing the shapes, and add shapes that only reading the files reveals.
+
+---
+
+# Phase 3 — hardening round 2 ("r2")
+
+What the eight r1 trajectories showed: every run printed all inputs in two steps, transcribed
+each policy clause into one script (Decimal, casefold, active-line filter, futures-only
+alternate, HALF_UP), self-checked its output and finished in 6–8 steps. Four of eight built
+the manifest with a last-wins dictionary. No run had to reason about the data, because every
+shape was announced by a sentence in the policy and every number was already per bottle.
+
+Round 2 keeps every rule and stops announcing the shapes. The data now disagrees with a
+clause-by-clause transcription in three places a reader of the files sees at once:
+
+| Change | File | Governing clause | Transcription that breaks |
+|---|---|---|---|
+| `pack` column; six lines priced per pack (`6x75cl`, `12x75cl`, `3x75cl`) with identical per-bottle values | `wine_purchases.csv` | S0 "every rule is per bottle; a line gives its prices for the pack on that line" | pack price + per-bottle freight: W-21, W-32, W-40 flip to compliant |
+| freight on a stated basis: `freight`, `freight_basis` (`per bottle` / `per case`), `case_size`; Bordeaux Negoce, Tuscan Vines, Barossa Exports quoted per case | `supplier_terms.csv` | S0 "freight is given on the basis the terms state", WM1 "freight per bottle" | 26.40 read as per bottle: W-11, W-12 and every Tuscan/Bordeaux/Barossa wine flagged |
+| `effective_from` column; W-05 newer row first (expected supplier now `Napa Valley Co` → compliant), W-20 older `still` row first, newer `sparkling` second; W-24 a 2026-dated row last | `wine_manifest.csv` | S0 "latest effective_from on or before 31 Dec 2025 governs" | last-wins: W-05, W-24 wrong; first-wins: W-20 wrong; future row honoured: W-24 wrong |
+| removed "an export may repeat a line" and "whether or not that supplier is the one the manifest expects" | `margin_policy.md` | S0 "one wine per wine_id", WM1 "supplier named on the governing line" still pin both | the repeated W-08 line and the invoiced-freight rule are now found in the data, not read in the policy |
+
+Answer r2: 40 wines, 14 MARGIN_TOO_LOW, 6 VINTAGE_INVALID, 5 SUPPLIER_MISMATCH, 18 compliant,
+shortfall total 14.37 (unchanged: every per-bottle value is the same as r1). Exempt low-margin
+wines still W-02, W-29, W-30.
+
+Local replay: `score.py` on gold 1.0 (10/10); `test_outputs.py` 20 lanes green;
+`tools/probes.py` faithful 1.0 and all 19 shortcuts 0.0 (the five new ones: pack ignored →
+W-21/W-32/W-40; basis ignored → W-11/W-12…; manifest last-wins → W-05/W-24; first-wins → W-20;
+future row honoured → W-24).
+
+Harbor runs for r2:
+```
+harbor run -p tasks\gen-g205-wine-purchasing-margin-audit -a oracle -k 1 -n 1 --env-file glm.env -o jobs --job-name oracle-g205-r2 -y
+for /d %d in (jobs\oracle-g205-r2\*) do @type "%d\verifier\reward.txt"
+harbor run -p tasks\gen-g205-wine-purchasing-margin-audit -a terminus-2 -m openai/glm-5.2 -k 8 -n 4 --env-file glm.env -o jobs --job-name glm-g205-r2 -y
+for /d %d in (jobs\glm-g205-r2\*) do @type "%d\verifier\reward.txt"
+```
+Results: (pending)

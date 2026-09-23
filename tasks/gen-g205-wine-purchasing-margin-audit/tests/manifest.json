@@ -127,7 +127,7 @@
               "finding": "VINTAGE_INVALID"
             },
             "W-05": {
-              "finding": "SUPPLIER_MISMATCH"
+              "finding": "compliant"
             },
             "W-06": {
               "finding": "compliant"
@@ -331,7 +331,7 @@
       },
       "assertion": {
         "type": "deterministic",
-        "expected": "(?s)(?=.*\\bW\\-03\\b)(?=.*\\bW\\-04\\b)(?=.*\\bW\\-05\\b)(?=.*\\bW\\-07\\b)(?=.*\\bW\\-10\\b)(?=.*\\bW\\-13\\b)(?=.*\\bW\\-14\\b)(?=.*\\bW\\-15\\b)(?=.*\\bW\\-16\\b)(?=.*\\bW\\-17\\b)(?=.*\\bW\\-19\\b)(?=.*\\bW\\-20\\b)(?=.*\\bW\\-21\\b)(?=.*\\bW\\-22\\b)(?=.*\\bW\\-23\\b)(?=.*\\bW\\-25\\b)(?=.*\\bW\\-28\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-32\\b)(?=.*\\bW\\-35\\b)(?=.*\\bW\\-36\\b)(?=.*\\bW\\-38\\b)(?=.*\\bW\\-40\\b)",
+        "expected": "(?s)(?=.*\\bW\\-03\\b)(?=.*\\bW\\-04\\b)(?=.*\\bW\\-07\\b)(?=.*\\bW\\-10\\b)(?=.*\\bW\\-13\\b)(?=.*\\bW\\-14\\b)(?=.*\\bW\\-15\\b)(?=.*\\bW\\-16\\b)(?=.*\\bW\\-17\\b)(?=.*\\bW\\-19\\b)(?=.*\\bW\\-20\\b)(?=.*\\bW\\-21\\b)(?=.*\\bW\\-22\\b)(?=.*\\bW\\-23\\b)(?=.*\\bW\\-25\\b)(?=.*\\bW\\-28\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-32\\b)(?=.*\\bW\\-35\\b)(?=.*\\bW\\-36\\b)(?=.*\\bW\\-38\\b)(?=.*\\bW\\-40\\b)",
         "deterministic": {
           "path": "$.text",
           "comparison": "regex_match"
@@ -452,11 +452,11 @@
               "tolerance": null
             },
             "supplier_mismatch_count": {
-              "value": 6,
+              "value": 5,
               "tolerance": null
             },
             "compliant_count": {
-              "value": 17,
+              "value": 18,
               "tolerance": null
             },
             "margin_shortfall_total": {

@@ -55,8 +55,21 @@ def cents(x: Decimal) -> Decimal:
 
 
 def main() -> int:
-    manifest = {norm(r["wine_id"]): r for r in rows("wine_manifest.csv")}
-    freight = {norm(r["supplier"]): Decimal(r["freight_per_bottle"]) for r in rows("supplier_terms.csv")}
+    # S0: the manifest entry with the latest effective_from on or before 31 Dec of the review year governs
+    manifest: dict[str, dict[str, str]] = {}
+    for r in rows("wine_manifest.csv"):
+        if r["effective_from"].strip() > f"{REVIEW_YEAR}-12-31":
+            continue
+        key = norm(r["wine_id"])
+        if key not in manifest or r["effective_from"].strip() > manifest[key]["effective_from"].strip():
+            manifest[key] = r
+    # S0/WM1: freight per bottle on the basis the terms state
+    freight: dict[str, Decimal] = {}
+    for r in rows("supplier_terms.csv"):
+        basis = norm(r["freight_basis"])
+        per_bottle = Decimal(r["freight"]) / (Decimal(r["case_size"]) if basis == "per case" else 1)
+        assert basis in ("per bottle", "per case"), r
+        freight[norm(r["supplier"])] = per_bottle
 
     # S0: one wine per wine_id; the active line governs; superseded/void lines are not read;
     # a repeated line is the same line. Output ids are written as the purchases file writes them.
@@ -78,7 +91,8 @@ def main() -> int:
         r = governing[key]
         wid = r["wine_id"].strip()
         m = manifest.get(key)
-        purchase, selling = Decimal(r["purchase_price"]), Decimal(r["selling_price"])
+        bottles = Decimal(re.fullmatch(r"(\d+)x\d+cl", r["pack"].strip()).group(1))  # S0: prices are per pack
+        purchase, selling = Decimal(r["purchase_price"]) / bottles, Decimal(r["selling_price"]) / bottles
         supplier = norm(r["supplier"])
         futures = norm(r["wine_type"]) == "futures"
         category = norm(m["category"]) if m else ""
@@ -173,7 +187,7 @@ def main() -> int:
     (FILES / "wine_memo.md").write_text(memo_text, encoding="utf-8")
 
     # ---- golden trajectory (heredoc replay) ------------------------------------------
-    reads = ["wine_purchases.csv", "wine_manifest.csv", "supplier_terms.csv", "margin_policy.md",
+    reads = ["margin_policy.md", "wine_purchases.csv", "wine_manifest.csv", "supplier_terms.csv",
              "submission_format.md"]
     steps = [{"name": "bash", "server": "local", "arguments": {"command": f"cat input/{f}"}} for f in reads]
     for fname, text, tag in (("wine_findings.csv", csv_text, "FINDINGSEOF"),

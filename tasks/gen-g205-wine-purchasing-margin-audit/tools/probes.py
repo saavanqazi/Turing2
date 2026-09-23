@@ -31,10 +31,27 @@ def rows(name):
 def solve(*, flat20=False, no_freight=False, expected_freight=False, first_wins=False, last_wins=False,
           per_line=False, all_futures_exempt=False, alt_on_stock=False, round1dp=False, nv_invalid=False,
           case_sensitive=False, no_futures_year=False, count_lines=False, float_round=False,
-          strip_only=False):
+          strip_only=False, pack_ignored=False, basis_ignored=False, manifest_last=False,
+          manifest_first=False, future_row_honoured=False):
     n = (lambda s: (s or "").strip()) if (case_sensitive or strip_only) else (lambda s: (s or "").strip().casefold())
-    manifest = {n(r["wine_id"]): r for r in rows("wine_manifest.csv")}
-    freight = {n(r["supplier"]): Decimal(r["freight_per_bottle"]) for r in rows("supplier_terms.csv")}
+    manifest = {}
+    for r in rows("wine_manifest.csv"):
+        k = n(r["wine_id"])
+        if manifest_last:
+            manifest[k] = r
+        elif manifest_first:
+            manifest.setdefault(k, r)
+        else:
+            if r["effective_from"] > "2025-12-31" and not future_row_honoured:
+                continue
+            if k not in manifest or r["effective_from"] > manifest[k]["effective_from"]:
+                manifest[k] = r
+    freight = {}
+    for r in rows("supplier_terms.csv"):
+        f = Decimal(r["freight"])
+        if n(r["freight_basis"]) == "per case" and not basis_ignored:
+            f = f / Decimal(r["case_size"])
+        freight[n(r["supplier"])] = f
     lines = rows("wine_purchases.csv")
     if per_line:
         chosen = [(r["wine_id"].strip(), r) for r in lines if n(r["po_status"]) == "active"]
@@ -54,7 +71,8 @@ def solve(*, flat20=False, no_freight=False, expected_freight=False, first_wins=
     out, counts, short = [], {"MARGIN_TOO_LOW": 0, "VINTAGE_INVALID": 0, "SUPPLIER_MISMATCH": 0}, Decimal("0")
     for wid, r in chosen:
         m = manifest.get(n(r["wine_id"]))
-        purchase, selling = Decimal(r["purchase_price"]), Decimal(r["selling_price"])
+        bottles = Decimal(1) if pack_ignored else Decimal(re.fullmatch(r"(\d+)x\d+cl", r["pack"].strip()).group(1))
+        purchase, selling = Decimal(r["purchase_price"]) / bottles, Decimal(r["selling_price"]) / bottles
         sup = n(r["supplier"])
         futures = n(r["wine_type"]) == "futures"
         cat = n(m["category"]) if m else ""
@@ -128,6 +146,11 @@ PROBES = {
     "case-sensitive supplier/type comparison": {"case_sensitive": True},
     "futures vintage capped at the review year": {"no_futures_year": True},
     "shortfall rounded with float round()": {"float_round": True},
+    "pack prices treated as per-bottle prices": {"pack_ignored": True},
+    "freight read as per bottle regardless of basis": {"basis_ignored": True},
+    "manifest: last row per wine wins (dict overwrite)": {"manifest_last": True},
+    "manifest: first row per wine wins": {"manifest_first": True},
+    "manifest: row dated after the review year honoured": {"future_row_honoured": True},
 }
 
 if __name__ == "__main__":

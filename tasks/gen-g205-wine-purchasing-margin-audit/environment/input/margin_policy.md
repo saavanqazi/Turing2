@@ -4,14 +4,20 @@ Binding for the purchasing table `wine_purchases.csv`. Where a wine line, the ma
 (`wine_manifest.csv`) or the supplier terms (`supplier_terms.csv`) and this policy disagree,
 the policy decides. The manifest names each wine's category, its expected supplier and, where
 one is approved, an alternate supplier; for a futures wine it also records whether the
-allocation is `open` or `closed`. The supplier terms give each supplier's freight per bottle.
+allocation is `open` or `closed`. The supplier terms give each supplier's freight.
 
 ## S0 — scope and reading conventions
 
 - The review covers one wine per `wine_id`. A wine may appear on several lines of the
   purchasing table: only the line whose `po_status` is `active` governs the wine. Lines
-  marked `superseded` or `void` are not read for any rule. An export may repeat a line
-  verbatim; a repeated line is the same line, not a second wine.
+  marked `superseded` or `void` are not read for any rule.
+- A manifest entry is in force from its `effective_from` date. Where a wine has more than one
+  manifest entry, the entry with the latest `effective_from` on or before the last day of the
+  review year (31 December 2025) governs; an entry dated after that day is not in force for
+  this review.
+- Every rule in this policy is stated per bottle. A purchasing line gives its prices for the
+  pack on that line (`pack`, bottles × bottle size); supplier freight is given on the basis the
+  terms state.
 - Identifiers, supplier names, categories, status values and `wine_type` values are compared
   after trimming surrounding whitespace and without regard to letter case. No other
   normalisation is applied: two names that differ in any character are different names.
@@ -20,11 +26,10 @@ allocation is `open` or `closed`. The supplier terms give each supplier's freigh
 
 ## WM1 — the margin must meet the category minimum
 
-- Landed cost = `purchase_price` + the freight per bottle of the supplier named on the wine's
-  governing line, taken from `supplier_terms.csv`. It is the invoiced supplier's freight
-  that applies, whether or not that supplier is the one the manifest expects.
-- Margin = (`selling_price` − landed cost) ÷ landed cost, expressed in percent and compared
-  unrounded.
+- Landed cost per bottle = purchase price per bottle + the freight per bottle of the supplier
+  named on the wine's governing line, taken from `supplier_terms.csv`.
+- Margin = (selling price per bottle − landed cost) ÷ landed cost, expressed in percent and
+  compared unrounded.
 - The minimum depends on the wine's category in the manifest:
 
   | category | minimum margin |
@@ -62,6 +67,6 @@ allocation is `open` or `closed`. The supplier terms give each supplier's freigh
 
 - Codes: `MARGIN_TOO_LOW`, `VINTAGE_INVALID`, `SUPPLIER_MISMATCH`. A wine may carry more than
   one, joined with `|` in that order. A wine with no finding is `compliant`.
-- Margin shortfall of a `MARGIN_TOO_LOW` wine = landed cost × (1 + minimum ÷ 100) −
-  `selling_price`, rounded to the cent, half a cent rounding up. The margin shortfall total
-  is the sum of the shortfalls of every `MARGIN_TOO_LOW` wine.
+- Margin shortfall of a `MARGIN_TOO_LOW` wine = landed cost per bottle × (1 + minimum ÷ 100) −
+  selling price per bottle, rounded to the cent, half a cent rounding up. The margin shortfall
+  total is the sum of the shortfalls of every `MARGIN_TOO_LOW` wine.

@@ -1,12 +1,11 @@
 # Wine purchasing and margin audit — review year 2025
 
-40 wines reviewed against WM-STD-1 (one per wine_id; only the active purchasing line read). 23 carry a finding and 17 are compliant. Margin shortfall total 14.37.
+40 wines reviewed against WM-STD-1 (one per wine_id; only the active purchasing line read). 22 carry a finding and 18 are compliant. Margin shortfall total 14.37.
 
 | Wine | Finding | Why |
 |---|---|---|
 | `W-03` | MARGIN_TOO_LOW | 5.59 pct on a landed cost of 16.10 (still minimum 20 pct), shortfall 2.32 |
 | `W-04` | VINTAGE_INVALID | vintage 2026 outside 2000-2025 |
-| `W-05` | SUPPLIER_MISMATCH | supplier Napa Valley Co where the manifest expects Napa Ridge Imports |
 | `W-07` | MARGIN_TOO_LOW | 22.22 pct on a landed cost of 10.80 (sparkling minimum 25 pct), shortfall 0.30 |
 | `W-10` | MARGIN_TOO_LOW | 18.90 pct on a landed cost of 16.40 (still minimum 20 pct), shortfall 0.18 |
 | `W-13` | MARGIN_TOO_LOW | 11.11 pct on a landed cost of 46.80 (still minimum 20 pct), shortfall 4.16 |
