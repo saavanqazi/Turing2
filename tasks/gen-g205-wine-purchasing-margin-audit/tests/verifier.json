@@ -1,0 +1,380 @@
+{
+  "task_id": "gen-G205-wine-purchasing-margin-audit",
+  "verifiers": [
+    {
+      "name": "findings_delivered",
+      "metadata": {
+        "how_justification": "Checks wine_findings.csv is present as a file in the workspace.",
+        "why_justification": "Wine findings delivered."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "filesystem",
+          "command": "check_path_exists",
+          "arguments": {
+            "path": "wine_findings.csv"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": true,
+        "deterministic": {
+          "path": "$.is_file",
+          "comparison": "equals"
+        }
+      }
+    },
+    {
+      "name": "memo_delivered",
+      "metadata": {
+        "how_justification": "Checks wine_memo.md is present as a file in the workspace.",
+        "why_justification": "Wine memo delivered."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "filesystem",
+          "command": "check_path_exists",
+          "arguments": {
+            "path": "wine_memo.md"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": true,
+        "deterministic": {
+          "path": "$.is_file",
+          "comparison": "equals"
+        }
+      }
+    },
+    {
+      "name": "schema_present",
+      "metadata": {
+        "how_justification": "Opens wine_findings.csv with csv.extract_text and applies regex_match.",
+        "why_justification": "Findings CSV carries the requested schema."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "csv",
+          "command": "extract_text",
+          "arguments": {
+            "path": "wine_findings.csv"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": "\\bwine_id.*finding",
+        "deterministic": {
+          "path": "$.text",
+          "comparison": "regex_match"
+        }
+      }
+    },
+    {
+      "name": "margin_flagged",
+      "metadata": {
+        "how_justification": "Opens wine_findings.csv with csv.extract_text and applies regex_match.",
+        "why_justification": "The low-margin wine is flagged."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "csv",
+          "command": "extract_text",
+          "arguments": {
+            "path": "wine_findings.csv"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": "(?mi)^\\x22?W\\-3\\x22?\\s*,.*MARGIN_TOO_LOW",
+        "deterministic": {
+          "path": "$.text",
+          "comparison": "regex_match"
+        }
+      }
+    },
+    {
+      "name": "vintage_flagged",
+      "metadata": {
+        "how_justification": "Opens wine_findings.csv with csv.extract_text and applies regex_match.",
+        "why_justification": "The invalid-vintage wine is flagged."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "csv",
+          "command": "extract_text",
+          "arguments": {
+            "path": "wine_findings.csv"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": "(?mi)^\\x22?W\\-4\\x22?\\s*,.*VINTAGE_INVALID",
+        "deterministic": {
+          "path": "$.text",
+          "comparison": "regex_match"
+        }
+      }
+    },
+    {
+      "name": "supplier_flagged",
+      "metadata": {
+        "how_justification": "Opens wine_findings.csv with csv.extract_text and applies regex_match.",
+        "why_justification": "The wrong-supplier wine is flagged."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "csv",
+          "command": "extract_text",
+          "arguments": {
+            "path": "wine_findings.csv"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": "(?mi)^\\x22?W\\-5\\x22?\\s*,.*SUPPLIER_MISMATCH",
+        "deterministic": {
+          "path": "$.text",
+          "comparison": "regex_match"
+        }
+      }
+    },
+    {
+      "name": "futures_not_flagged",
+      "metadata": {
+        "how_justification": "Opens wine_findings.csv with csv.extract_text and applies regex_match.",
+        "why_justification": "A futures wine with a low margin must not be flagged."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "csv",
+          "command": "extract_text",
+          "arguments": {
+            "path": "wine_findings.csv"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": "(?s)^(?!.*\\bW-2\\b[^\\n]*\\bMARGIN_TOO_LOW\\b).*$",
+        "deterministic": {
+          "path": "$.text",
+          "comparison": "regex_match"
+        }
+      }
+    },
+    {
+      "name": "memo_names_trap",
+      "metadata": {
+        "how_justification": "Opens wine_memo.md with md.extract_text and applies contains.",
+        "why_justification": "Memo names the wine that looks low-margin and is not."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "md",
+          "command": "extract_text",
+          "arguments": {
+            "path": "wine_memo.md"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": "W-2",
+        "deterministic": {
+          "path": "$.text",
+          "comparison": "contains"
+        }
+      }
+    },
+    {
+      "name": "memo_explains_futures",
+      "metadata": {
+        "how_justification": "Opens wine_memo.md with md.extract_text and applies regex_match.",
+        "why_justification": "Memo ties the exemption to futures wines being exempt."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "md",
+          "command": "extract_text",
+          "arguments": {
+            "path": "wine_memo.md"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": "(?i)\\bfutures\\w*\\b.*\\bexempt",
+        "deterministic": {
+          "path": "$.text",
+          "comparison": "regex_match"
+        }
+      }
+    },
+    {
+      "name": "results_exists",
+      "metadata": {
+        "how_justification": "Checks results.json is present as a file in the workspace.",
+        "why_justification": "Derived figures delivered."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "filesystem",
+          "command": "check_path_exists",
+          "arguments": {
+            "path": "results.json"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": true,
+        "deterministic": {
+          "path": "$.is_file",
+          "comparison": "equals"
+        }
+      }
+    },
+    {
+      "name": "result_wine_count",
+      "metadata": {
+        "how_justification": "Reads results.json with json.read_file and compares $.wine_count.",
+        "why_justification": "Derived figure `wine_count`, recomputed from the delivered artifacts."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "json",
+          "command": "read_file",
+          "arguments": {
+            "path": "results.json"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": 6,
+        "deterministic": {
+          "path": "$.wine_count",
+          "comparison": "equals"
+        }
+      }
+    },
+    {
+      "name": "result_margin_too_low_count",
+      "metadata": {
+        "how_justification": "Reads results.json with json.read_file and compares $.margin_too_low_count.",
+        "why_justification": "Derived figure `margin_too_low_count`, recomputed from the delivered artifacts."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "json",
+          "command": "read_file",
+          "arguments": {
+            "path": "results.json"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": 1,
+        "deterministic": {
+          "path": "$.margin_too_low_count",
+          "comparison": "equals"
+        }
+      }
+    },
+    {
+      "name": "result_vintage_invalid_count",
+      "metadata": {
+        "how_justification": "Reads results.json with json.read_file and compares $.vintage_invalid_count.",
+        "why_justification": "Derived figure `vintage_invalid_count`, recomputed from the delivered artifacts."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "json",
+          "command": "read_file",
+          "arguments": {
+            "path": "results.json"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": 1,
+        "deterministic": {
+          "path": "$.vintage_invalid_count",
+          "comparison": "equals"
+        }
+      }
+    },
+    {
+      "name": "result_supplier_mismatch_count",
+      "metadata": {
+        "how_justification": "Reads results.json with json.read_file and compares $.supplier_mismatch_count.",
+        "why_justification": "Derived figure `supplier_mismatch_count`, recomputed from the delivered artifacts."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "json",
+          "command": "read_file",
+          "arguments": {
+            "path": "results.json"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": 1,
+        "deterministic": {
+          "path": "$.supplier_mismatch_count",
+          "comparison": "equals"
+        }
+      }
+    },
+    {
+      "name": "result_compliant_count",
+      "metadata": {
+        "how_justification": "Reads results.json with json.read_file and compares $.compliant_count.",
+        "why_justification": "Derived figure `compliant_count`, recomputed from the delivered artifacts."
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "json",
+          "command": "read_file",
+          "arguments": {
+            "path": "results.json"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": 3,
+        "deterministic": {
+          "path": "$.compliant_count",
+          "comparison": "equals"
+        }
+      }
+    }
+  ]
+}

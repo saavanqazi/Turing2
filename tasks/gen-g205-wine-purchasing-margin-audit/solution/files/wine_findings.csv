@@ -1,0 +1,7 @@
+wine_id,finding
+W-1,compliant
+W-2,compliant
+W-3,MARGIN_TOO_LOW
+W-4,VINTAGE_INVALID
+W-5,SUPPLIER_MISMATCH
+W-6,compliant

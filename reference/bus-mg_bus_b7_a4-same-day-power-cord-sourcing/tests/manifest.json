@@ -1,0 +1,333 @@
+{
+  "task_id": "bus-mg_bus_b7_a4-same-day-power-cord-sourcing",
+  "verifiers": [
+    {
+      "name": "evaluation_exists",
+      "metadata": {
+        "how_justification": "Checks offer_evaluation.csv is present as a file in the workspace.",
+        "why_justification": "The offer comparison sheet is delivered.",
+        "tag": "core"
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "filesystem",
+          "command": "check_path_exists",
+          "arguments": {
+            "path": "offer_evaluation.csv"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": true,
+        "deterministic": {
+          "path": "$.is_file",
+          "comparison": "equals"
+        }
+      }
+    },
+    {
+      "name": "evaluation_header",
+      "metadata": {
+        "how_justification": "Opens offer_evaluation.csv with csv.extract_text and applies regex_match.",
+        "why_justification": "The contract document pins the header verbatim. Entailed by: \"Header, exactly: `offer_id,decision,reason_code,landed_cost_usd`\"",
+        "tag": "core"
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "csv",
+          "command": "extract_text",
+          "arguments": {
+            "path": "offer_evaluation.csv"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": "(?i)\\A\\x22?offer_id\\x22?[ \\t]*,[ \\t]*\\x22?decision\\x22?[ \\t]*,[ \\t]*\\x22?reason_code\\x22?[ \\t]*,[ \\t]*\\x22?landed_cost_usd\\x22?[ \\t]*\\r?\\n",
+        "deterministic": {
+          "path": "$.text",
+          "comparison": "regex_match"
+        }
+      }
+    },
+    {
+      "name": "evaluation_table_trap_of01",
+      "metadata": {
+        "how_justification": "Parses offer_evaluation.csv with csv.read_rows and applies table_equals to every graded cell of the OF-01 row (matched by 'offer_id'); a failure names the exact cell.",
+        "why_justification": "Every offer's decision, its reason under the stated precedence and its landed cost are graded, so a clock read on the wrong side of the state line, a dropped fit clause or tax taken at the buyer's rate shows on the rows it moves. Entailed by: \"One row per offer in `same_day_offers.csv`, in any order, with `offer_id` as that file writes it: `decision` is `ELIGIBLE` or `INELIGIBLE`, `reason_code` is the first clause of the terms that refuses the offer and `NONE` for an offer nothing refuses, and `landed_cost_usd` is what the buyer pays for an eligible offer, in US dollars to the cent, and is left empty on an offer that is not eligible.\"",
+        "tag": "core"
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "csv",
+          "command": "read_rows",
+          "arguments": {
+            "path": "offer_evaluation.csv"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": {
+          "id_column": "offer_id",
+          "rows": {
+            "OF-01": {
+              "decision": "INELIGIBLE",
+              "reason_code": "NO_STOCK",
+              "landed_cost_usd": ""
+            }
+          },
+          "cell_types": {
+            "decision": "id",
+            "reason_code": "id"
+          }
+        },
+        "deterministic": {
+          "path": "$",
+          "comparison": "table_equals"
+        }
+      }
+    },
+    {
+      "name": "evaluation_table",
+      "metadata": {
+        "how_justification": "Parses offer_evaluation.csv with csv.read_rows and applies table_equals: every graded cell of 21 rows plus the full 22-row population as a row_set lock (duplicate-row and cross-product dumps fail the lock; a duplicated graded id is rejected outright), and the delivered column set closed to the stated header, with declared cell types {'decision': 'id', 'reason_code': 'id'} normalised on both sides. A failure names the exact row and column.",
+        "why_justification": "Every offer's decision, its reason under the stated precedence and its landed cost are graded, so a clock read on the wrong side of the state line, a dropped fit clause or tax taken at the buyer's rate shows on the rows it moves. Entailed by: \"One row per offer in `same_day_offers.csv`, in any order, with `offer_id` as that file writes it: `decision` is `ELIGIBLE` or `INELIGIBLE`, `reason_code` is the first clause of the terms that refuses the offer and `NONE` for an offer nothing refuses, and `landed_cost_usd` is what the buyer pays for an eligible offer, in US dollars to the cent, and is left empty on an offer that is not eligible.\"",
+        "tag": "core"
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "csv",
+          "command": "read_rows",
+          "arguments": {
+            "path": "offer_evaluation.csv"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": {
+          "id_column": "offer_id",
+          "rows": {
+            "OF-02": {
+              "decision": "ELIGIBLE",
+              "reason_code": "NONE",
+              "landed_cost_usd": "23.97"
+            },
+            "OF-03": {
+              "decision": "INELIGIBLE",
+              "reason_code": "OUT_OF_RADIUS",
+              "landed_cost_usd": ""
+            },
+            "OF-04": {
+              "decision": "ELIGIBLE",
+              "reason_code": "NONE",
+              "landed_cost_usd": "18.62"
+            },
+            "OF-05": {
+              "decision": "INELIGIBLE",
+              "reason_code": "SAME_DAY_SUSPENDED",
+              "landed_cost_usd": ""
+            },
+            "OF-06": {
+              "decision": "INELIGIBLE",
+              "reason_code": "FIT_POLARIZED",
+              "landed_cost_usd": ""
+            },
+            "OF-07": {
+              "decision": "INELIGIBLE",
+              "reason_code": "FIT_GAUGE",
+              "landed_cost_usd": ""
+            },
+            "OF-08": {
+              "decision": "ELIGIBLE",
+              "reason_code": "NONE",
+              "landed_cost_usd": "24.13"
+            },
+            "OF-09": {
+              "decision": "ELIGIBLE",
+              "reason_code": "NONE",
+              "landed_cost_usd": "34.12"
+            },
+            "OF-10": {
+              "decision": "INELIGIBLE",
+              "reason_code": "FIT_CONNECTOR",
+              "landed_cost_usd": ""
+            },
+            "OF-11": {
+              "decision": "INELIGIBLE",
+              "reason_code": "FIT_LENGTH",
+              "landed_cost_usd": ""
+            },
+            "OF-12": {
+              "decision": "ELIGIBLE",
+              "reason_code": "NONE",
+              "landed_cost_usd": "18.62"
+            },
+            "OF-13": {
+              "decision": "INELIGIBLE",
+              "reason_code": "STOCK_RESERVE",
+              "landed_cost_usd": ""
+            },
+            "OF-14": {
+              "decision": "INELIGIBLE",
+              "reason_code": "FIT_GAUGE",
+              "landed_cost_usd": ""
+            },
+            "OF-15": {
+              "decision": "INELIGIBLE",
+              "reason_code": "FIT_LENGTH",
+              "landed_cost_usd": ""
+            },
+            "OF-16": {
+              "decision": "INELIGIBLE",
+              "reason_code": "FIT_GAUGE",
+              "landed_cost_usd": ""
+            },
+            "OF-17": {
+              "decision": "INELIGIBLE",
+              "reason_code": "SAME_DAY_SUSPENDED",
+              "landed_cost_usd": ""
+            },
+            "OF-18": {
+              "decision": "ELIGIBLE",
+              "reason_code": "NONE",
+              "landed_cost_usd": "23.75"
+            },
+            "OF-19": {
+              "decision": "INELIGIBLE",
+              "reason_code": "STOCK_RESERVE",
+              "landed_cost_usd": ""
+            },
+            "OF-20": {
+              "decision": "ELIGIBLE",
+              "reason_code": "NONE",
+              "landed_cost_usd": "18.66"
+            },
+            "OF-21": {
+              "decision": "ELIGIBLE",
+              "reason_code": "NONE",
+              "landed_cost_usd": "18.62"
+            },
+            "OF-22": {
+              "decision": "INELIGIBLE",
+              "reason_code": "FIT_LENGTH",
+              "landed_cost_usd": ""
+            }
+          },
+          "row_set": [
+            "OF-01",
+            "OF-02",
+            "OF-03",
+            "OF-04",
+            "OF-05",
+            "OF-06",
+            "OF-07",
+            "OF-08",
+            "OF-09",
+            "OF-10",
+            "OF-11",
+            "OF-12",
+            "OF-13",
+            "OF-14",
+            "OF-15",
+            "OF-16",
+            "OF-17",
+            "OF-18",
+            "OF-19",
+            "OF-20",
+            "OF-21",
+            "OF-22"
+          ],
+          "columns": [
+            "offer_id",
+            "decision",
+            "reason_code",
+            "landed_cost_usd"
+          ],
+          "cell_types": {
+            "decision": "id",
+            "reason_code": "id"
+          }
+        },
+        "deterministic": {
+          "path": "$",
+          "comparison": "table_equals"
+        }
+      }
+    },
+    {
+      "name": "results_figures",
+      "metadata": {
+        "how_justification": "Reads results.json with json.read_file and applies object_equals over the 3 graded keys with the key set closed; numeric keys compare within an absolute tolerance and a failure names the exact key.",
+        "why_justification": "The count, the chosen offer and its total each move under the store-local cutoff, the fit clauses, the floor-stock reserve and the fulfilling store's tax rate; the contract closes the key set.",
+        "tag": "core"
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "json",
+          "command": "read_file",
+          "arguments": {
+            "path": "results.json"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": {
+          "keys": {
+            "eligible_offer_count": {
+              "value": 8,
+              "tolerance": null
+            },
+            "chosen_offer_id": {
+              "value": "OF-21",
+              "tolerance": null
+            },
+            "chosen_total_usd": {
+              "value": 18.62,
+              "tolerance": 0.01
+            }
+          },
+          "closed": true
+        },
+        "deterministic": {
+          "path": "$",
+          "comparison": "object_equals"
+        }
+      }
+    },
+    {
+      "name": "results_exists",
+      "metadata": {
+        "how_justification": "Checks results.json is present as a file in the workspace.",
+        "why_justification": "Derived figures delivered.",
+        "tag": "core"
+      },
+      "source": {
+        "type": "file",
+        "file": {
+          "type": "filesystem",
+          "command": "check_path_exists",
+          "arguments": {
+            "path": "results.json"
+          }
+        }
+      },
+      "assertion": {
+        "type": "deterministic",
+        "expected": true,
+        "deterministic": {
+          "path": "$.is_file",
+          "comparison": "equals"
+        }
+      }
+    }
+  ]
+}
