@@ -5,7 +5,7 @@
       "name": "findings_exists",
       "metadata": {
         "how_justification": "Checks wine_findings.csv is present as a file in the workspace.",
-        "why_justification": "The findings sheet is delivered. Entailed by: \"Save `wine_findings.csv` with the columns `wine_id,finding`, one row per wine\"",
+        "why_justification": "The findings sheet is delivered. Entailed by: \"Give me `wine_findings.csv`, one row per wine with its finding\"",
         "tag": "core"
       },
       "source": {
@@ -57,7 +57,7 @@
       "name": "findings_table_trap",
       "metadata": {
         "how_justification": "Parses wine_findings.csv with csv.read_rows and applies table_equals to the finding cell of each wine whose margin is below the minimum but which WM1 leaves compliant (matched by 'wine_id'); a failure names the exact row.",
-        "why_justification": "A futures wine with a low margin is compliant under WM1; flagging it overstates the findings. Entailed by: \"`finding` is `compliant` for a wine with no finding\" and WM1's futures exemption.",
+        "why_justification": "A futures wine with an open allocation is exempt from WM1 whatever its margin; flagging it overstates the findings. Entailed by: \"`finding` is `compliant` for a wine with no finding\" and WM1's exemption clause.",
         "tag": "core"
       },
       "source": {
@@ -75,7 +75,13 @@
         "expected": {
           "id_column": "wine_id",
           "rows": {
-            "W-2": {
+            "W-02": {
+              "finding": "compliant"
+            },
+            "W-29": {
+              "finding": "VINTAGE_INVALID"
+            },
+            "W-30": {
               "finding": "compliant"
             }
           },
@@ -92,8 +98,8 @@
     {
       "name": "findings_table",
       "metadata": {
-        "how_justification": "Parses wine_findings.csv with csv.read_rows and applies table_equals: every graded cell of 5 rows plus the full 6-row population as a row_set lock (a duplicated or missing wine fails the lock), and the delivered column set closed to the stated header, with the finding cell compared as text (case-insensitive, whitespace-collapsed). A failure names the exact row.",
-        "why_justification": "Every wine's finding under WM1-WM3, with codes joined in policy order, is graded. Entailed by: \"One row per wine, keyed by `wine_id` as `wine_purchases.csv` writes it, in any order ... `finding` is `compliant` for a wine with no finding, otherwise the finding codes the wine carries, joined with `|` and written in policy order\"",
+        "how_justification": "Parses wine_findings.csv with csv.read_rows and applies table_equals: every graded cell of 37 rows plus the full 40-row population as a row_set lock (a duplicated or missing wine fails the lock), and the delivered column set closed to the stated header, with the finding cell compared as text (case-insensitive, whitespace-collapsed). A failure names the exact row.",
+        "why_justification": "Every wine's finding under WM1-WM3 on its governing line, with codes joined in policy order, is graded. Entailed by: \"One row per wine, keyed by `wine_id` as `wine_purchases.csv` writes it, in any order. A wine that appears on more than one line of the purchasing table is one wine and one row ... joined with `|` in policy order\"",
         "tag": "core"
       },
       "source": {
@@ -111,29 +117,159 @@
         "expected": {
           "id_column": "wine_id",
           "rows": {
-            "W-1": {
+            "W-01": {
               "finding": "compliant"
             },
-            "W-3": {
+            "W-03": {
               "finding": "MARGIN_TOO_LOW"
             },
-            "W-4": {
+            "W-04": {
               "finding": "VINTAGE_INVALID"
             },
-            "W-5": {
+            "W-05": {
               "finding": "SUPPLIER_MISMATCH"
             },
-            "W-6": {
+            "W-06": {
               "finding": "compliant"
+            },
+            "W-07": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-08": {
+              "finding": "compliant"
+            },
+            "W-09": {
+              "finding": "compliant"
+            },
+            "W-10": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-11": {
+              "finding": "compliant"
+            },
+            "W-12": {
+              "finding": "compliant"
+            },
+            "W-13": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-14": {
+              "finding": "VINTAGE_INVALID"
+            },
+            "W-15": {
+              "finding": "VINTAGE_INVALID"
+            },
+            "W-16": {
+              "finding": "SUPPLIER_MISMATCH"
+            },
+            "W-17": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-18": {
+              "finding": "compliant"
+            },
+            "W-19": {
+              "finding": "SUPPLIER_MISMATCH"
+            },
+            "W-20": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-21": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-22": {
+              "finding": "VINTAGE_INVALID|SUPPLIER_MISMATCH"
+            },
+            "W-23": {
+              "finding": "MARGIN_TOO_LOW|SUPPLIER_MISMATCH"
+            },
+            "W-24": {
+              "finding": "compliant"
+            },
+            "W-25": {
+              "finding": "MARGIN_TOO_LOW|VINTAGE_INVALID"
+            },
+            "W-26": {
+              "finding": "compliant"
+            },
+            "W-27": {
+              "finding": "compliant"
+            },
+            "W-28": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-31": {
+              "finding": "compliant"
+            },
+            "W-32": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-33": {
+              "finding": "compliant"
+            },
+            "W-34": {
+              "finding": "compliant"
+            },
+            "W-35": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-36": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-37": {
+              "finding": "compliant"
+            },
+            "W-38": {
+              "finding": "SUPPLIER_MISMATCH"
+            },
+            "W-39": {
+              "finding": "compliant"
+            },
+            "W-40": {
+              "finding": "MARGIN_TOO_LOW"
             }
           },
           "row_set": [
-            "W-1",
-            "W-2",
-            "W-3",
-            "W-4",
-            "W-5",
-            "W-6"
+            "W-01",
+            "W-02",
+            "W-03",
+            "W-04",
+            "W-05",
+            "W-06",
+            "W-07",
+            "W-08",
+            "W-09",
+            "W-10",
+            "W-11",
+            "W-12",
+            "W-13",
+            "W-14",
+            "W-15",
+            "W-16",
+            "W-17",
+            "W-18",
+            "W-19",
+            "W-20",
+            "W-21",
+            "W-22",
+            "W-23",
+            "W-24",
+            "W-25",
+            "W-26",
+            "W-27",
+            "W-28",
+            "W-29",
+            "W-30",
+            "W-31",
+            "W-32",
+            "W-33",
+            "W-34",
+            "W-35",
+            "W-36",
+            "W-37",
+            "W-38",
+            "W-39",
+            "W-40"
           ],
           "columns": [
             "wine_id",
@@ -153,7 +289,7 @@
       "name": "memo_exists",
       "metadata": {
         "how_justification": "Checks wine_memo.md is present as a file in the workspace.",
-        "why_justification": "The memo is delivered. Entailed by: \"Then write `wine_memo.md` explaining each finding\"",
+        "why_justification": "The memo is delivered. Entailed by: \"`wine_memo.md` explaining each finding and calling out the wines a plain margin check would flag that the policy does not\"",
         "tag": "core"
       },
       "source": {
@@ -195,7 +331,7 @@
       },
       "assertion": {
         "type": "deterministic",
-        "expected": "(?s)(?=.*\\bW\\-3\\b)(?=.*\\bW\\-4\\b)(?=.*\\bW\\-5\\b)",
+        "expected": "(?s)(?=.*\\bW\\-03\\b)(?=.*\\bW\\-04\\b)(?=.*\\bW\\-05\\b)(?=.*\\bW\\-07\\b)(?=.*\\bW\\-10\\b)(?=.*\\bW\\-13\\b)(?=.*\\bW\\-14\\b)(?=.*\\bW\\-15\\b)(?=.*\\bW\\-16\\b)(?=.*\\bW\\-17\\b)(?=.*\\bW\\-19\\b)(?=.*\\bW\\-20\\b)(?=.*\\bW\\-21\\b)(?=.*\\bW\\-22\\b)(?=.*\\bW\\-23\\b)(?=.*\\bW\\-25\\b)(?=.*\\bW\\-28\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-32\\b)(?=.*\\bW\\-35\\b)(?=.*\\bW\\-36\\b)(?=.*\\bW\\-38\\b)(?=.*\\bW\\-40\\b)",
         "deterministic": {
           "path": "$.text",
           "comparison": "regex_match"
@@ -206,7 +342,7 @@
       "name": "memo_names_trap",
       "metadata": {
         "how_justification": "Opens wine_memo.md with md.extract_text and applies a regex_match of look-aheads, one per exempt low-margin wine id, anywhere in the text; no wording or ordering is required.",
-        "why_justification": "The memo names the wine(s) that look low-margin and are not findings. Entailed by: \"name every wine whose margin is below the minimum but which the policy leaves compliant\"",
+        "why_justification": "The memo names the wines a plain margin check would flag that the policy does not. Entailed by: \"name every wine whose margin is below its minimum but which the policy leaves compliant\"",
         "tag": "incidental",
         "weight": 0.05
       },
@@ -222,7 +358,7 @@
       },
       "assertion": {
         "type": "deterministic",
-        "expected": "(?s)(?=.*\\bW\\-2\\b)",
+        "expected": "(?s)(?=.*\\bW\\-02\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-30\\b)",
         "deterministic": {
           "path": "$.text",
           "comparison": "regex_match"
@@ -260,7 +396,7 @@
       "name": "results_exists",
       "metadata": {
         "how_justification": "Checks results.json is present as a file in the workspace.",
-        "why_justification": "Derived figures delivered. Entailed by: \"`results.json` \u2014 a JSON object with the keys `wine_count`, `margin_too_low_count`, `vintage_invalid_count`, `supplier_mismatch_count`, `compliant_count`\"",
+        "why_justification": "Derived figures delivered. Entailed by: \"`results.json` \u2014 a JSON object with the keys `wine_count`, `margin_too_low_count`, `vintage_invalid_count`, `supplier_mismatch_count`, `compliant_count`, `margin_shortfall_total`\"",
         "tag": "core"
       },
       "source": {
@@ -286,7 +422,7 @@
       "name": "results_figures",
       "metadata": {
         "how_justification": "Reads results.json with json.read_file and applies object_equals to every key with the key set closed; a failure names the key.",
-        "why_justification": "The five counts are the figures the dashboard consumes and each is recomputable from the findings sheet. Entailed by: \"A JSON object with exactly these keys and nothing else\"",
+        "why_justification": "The five counts and the shortfall total are the dashboard's headline figures; each is recomputable from the findings sheet and the governing purchase lines. Entailed by: \"A JSON object with exactly these keys and nothing else\"",
         "tag": "core"
       },
       "source": {
@@ -304,24 +440,28 @@
         "expected": {
           "keys": {
             "wine_count": {
-              "value": 6,
+              "value": 40,
               "tolerance": null
             },
             "margin_too_low_count": {
-              "value": 1,
+              "value": 14,
               "tolerance": null
             },
             "vintage_invalid_count": {
-              "value": 1,
+              "value": 6,
               "tolerance": null
             },
             "supplier_mismatch_count": {
-              "value": 1,
+              "value": 6,
               "tolerance": null
             },
             "compliant_count": {
-              "value": 3,
+              "value": 17,
               "tolerance": null
+            },
+            "margin_shortfall_total": {
+              "value": 14.37,
+              "tolerance": 0.01
             }
           },
           "closed": true

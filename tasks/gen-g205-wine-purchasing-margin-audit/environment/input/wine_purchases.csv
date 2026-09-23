@@ -1,7 +1,45 @@
-wine_id,wine_name,purchase_price,selling_price,vintage,supplier,wine_type
-W-1,Cabernet,20.00,30.00,2019,NapaCo,stock
-W-2,Bordeaux,50.00,55.00,2020,BordeauxCo,futures
-W-3,Pinot,15.00,17.00,2018,OregonCo,stock
-W-4,Champagne,40.00,60.00,2026,ChampagneCo,stock
-W-5,Merlot,12.00,18.00,2021,WrongCo,stock
-W-6,Riesling,18.00,25.00,2020,MoselCo,stock
+wine_id,wine_name,purchase_price,selling_price,vintage,supplier,wine_type,po_date,po_status
+W-01,Cabernet Sauvignon Oakville,20.00,30.00,2019,Napa Ridge Imports,stock,2025-02-03,active
+W-02,Pauillac Grand Cru,50.00,55.00,2026,Bordeaux Negoce,futures,2025-05-12,active
+W-03,Pinot Noir Dundee Hills,15.00,17.00,2018,Willamette Partners,stock,2025-01-21,active
+W-04,Champagne Brut Reserve,40.00,60.00,2026,Reims Cellars,stock,2025-03-04,active
+W-05,Merlot Carneros,12.00,18.00,2021,Napa Valley Co,stock,2025-02-17,active
+W-06,Riesling Kabinett,18.00,25.00,2020,Mosel Handel,stock,2025-04-08,active
+W-07,Prosecco Superiore,9.00,13.20,2023,Tuscan Vines,stock,2025-06-02,active
+W-08,Rioja Reserva,16.00,22.00,2017,Rioja Direct,stock,2025-03-19,active
+W-08,Rioja Reserva,16.00,22.00,2017,Rioja Direct,stock,2025-03-19,active
+W-09,Tawny Port 10 Year,22.00,28.20,NV,Douro Trading,stock,2025-01-30,active
+W-10,Shiraz Barossa,14.00,19.50,2020,Barossa Exports,stock,2025-05-27,active
+W-11,Chianti Classico,13.50,18.36,2021,Tuscan Vines,stock,2025-02-25,active
+W-12,Sancerre,20.00,22.00,2023,Bordeaux Negoce,stock,2025-03-10,superseded
+W-12,Sancerre,20.00,27.00,2023,Bordeaux Negoce,stock,2025-04-14,active
+W-13,Barolo,45.00,52.00,2016,Tuscan Vines,stock,2025-06-16,active
+W-13,Barolo,45.00,60.00,2016,Tuscan Vines,stock,2025-05-05,superseded
+W-14,Vintage Port,30.00,37.50,1997,Douro Trading,stock,2025-02-11,active
+W-15,Cava Brut,8.00,12.00,NV,Rioja Direct,stock,2025-04-22,active
+W-16,Gruner Veltliner,11.00,16.90,2022,Mosel Handel,stock,2025-05-19,active
+W-17,Sauternes,35.00,40.00,2025,Bordeaux Negoce,futures,2025-06-09,active
+W-18,Margaux,80.00,120.00,2026,Left Bank Brokers,futures,2025-05-26,active
+W-19,Pomerol,60.00,78.00,2019,Left Bank Brokers,stock,2025-03-31,active
+W-20,Sekt Riesling,10.00,14.80,2021,mosel handel,stock,2025-04-01,active
+W-21,Zinfandel Lodi,23.50,29.99,2020,Napa Ridge Imports,stock,2025-02-06,active
+W-22,Chenin Blanc,9.00,12.10,2026,Finger Lakes Co,stock,2025-06-23,active
+W-23,Tempranillo Crianza,10.00,13.00,2019,Rioja Direct SL,stock,2025-03-24,active
+W-24,Malbec Reserve,11.00,16.20,2021,Barossa Exports ,stock,2025-05-13,active
+W-25,Muscadet,8.00,12.00,1999,Bordeaux Negoce,stock,2025-01-14,active
+W-26,Amarone,38.00,40.00,2015,Tuscan Vines,stock,2025-02-20,void
+W-26,Amarone,38.00,52.00,2015,Tuscan Vines,stock,2025-03-03,active
+W-27,Cremant de Loire,12.00,17.75,2022,Bordeaux Negoce,stock,2025-04-29,active
+W-28,Madeira 5 Year,26.00,32.50,NV,Douro Trading,stock,2025-05-06,active
+W-29,Hermitage,70.00,72.00,2027,Bordeaux Negoce,futures,2025-06-30,active
+W-30,Grenache Gris,9.00,11.00,2024,Rioja Direct,Futures,2025-06-11,active
+W-31,Albarino,12.00,16.10,2023,Rioja Direct,stock,2025-03-17,active
+W-32,Nebbiolo Langhe,25.00,31.00,2019,Tuscan Vines,stock,2025-04-07,active
+W-33,Gewurztraminer,14.00,19.50,2000,Mosel Handel,stock,2025-02-24,active
+W-34,Late Harvest Riesling,20.00,26.00,2025,Finger Lakes Co,stock,2025-06-18,active
+W-35,Lambrusco,7.00,10.90,2023,Tuscan Vines,stock,2025-05-20,active
+W-36,Fino Sherry,15.00,19.20,NV,Rioja Direct,stock,2025-01-27,active
+W-37,Syrah Paso Robles,16.00,21.00,2021,Napa Ridge Imports,stock,2025-03-12,active
+W-38,Vouvray,13.00,17.30,2022,Loire Direct,stock,2025-04-15,active
+W-39,Brunello di Montalcino,55.00,75.00,2026,Tuscan Vines,futures,2025-06-04,active
+W-40,Rose de Provence,8.00,11.30,2024,Napa Ridge Imports,stock,2025-05-28,active

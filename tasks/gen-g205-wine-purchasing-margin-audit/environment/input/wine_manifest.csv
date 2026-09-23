@@ -1,7 +1,40 @@
-wine_id,expected_supplier
-W-1,NapaCo
-W-2,BordeauxCo
-W-3,OregonCo
-W-4,ChampagneCo
-W-5,NapaCo
-W-6,MoselCo
+wine_id,category,expected_supplier,alternate_supplier,allocation,nv_allowed
+W-01,still,Napa Ridge Imports,,,N
+W-02,still,Bordeaux Negoce,Left Bank Brokers,open,N
+W-03,still,Willamette Partners,,,N
+W-04,sparkling,Reims Cellars,,,Y
+W-05,still,Napa Ridge Imports,,,N
+W-06,still,Mosel Handel,,,N
+W-07,sparkling,Tuscan Vines,,,Y
+W-08,still,Rioja Direct,,,N
+W-09,fortified,Douro Trading,,,Y
+W-10,still,Barossa Exports,,,N
+W-11,still,Tuscan Vines,,,N
+W-12,still,Bordeaux Negoce,,,N
+W-13,still,Tuscan Vines,,,N
+W-14,fortified,Douro Trading,,,Y
+W-15,sparkling,Rioja Direct,,,N
+W-17,still,Bordeaux Negoce,Left Bank Brokers,closed,N
+W-18,still,Bordeaux Negoce,Left Bank Brokers,open,N
+W-19,still,Bordeaux Negoce,Left Bank Brokers,,N
+W-20,sparkling,Mosel Handel,,,N
+W-21,still,Napa Ridge Imports,,,N
+W-22,still,Willamette Partners,,,N
+W-23,still,Rioja Direct,,,N
+W-24,still,Barossa Exports,,,N
+W-25,still,Bordeaux Negoce,,,N
+W-26,still,Tuscan Vines,,,N
+W-27,sparkling,Bordeaux Negoce,,,N
+W-28,fortified,Douro Trading,,,Y
+W-29,still,Bordeaux Negoce,Left Bank Brokers,open,N
+W-30,still,Rioja Direct,,open,N
+W-31,still,Rioja Direct,,,N
+W-32,still,Tuscan Vines,,,N
+W-33,still,Mosel Handel,,,N
+W-34,still,Finger Lakes Co,,,N
+W-35,sparkling,Tuscan Vines,,,N
+W-36,fortified,Rioja Direct,,,Y
+W-37,still,Napa Ridge Imports,,,N
+W-38,still,Bordeaux Negoce,,,N
+W-39,still,Tuscan Vines,,open,N
+W-40,still,Napa Ridge Imports,,,N

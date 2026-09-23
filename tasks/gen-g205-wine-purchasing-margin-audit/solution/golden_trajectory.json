@@ -17,6 +17,13 @@
     "name": "bash",
     "server": "local",
     "arguments": {
+      "command": "cat input/supplier_terms.csv"
+    }
+  },
+  {
+    "name": "bash",
+    "server": "local",
+    "arguments": {
       "command": "cat input/margin_policy.md"
     }
   },
@@ -31,21 +38,21 @@
     "name": "bash",
     "server": "local",
     "arguments": {
-      "command": "cat > wine_findings.csv << 'FINDINGSEOF'\nwine_id,finding\nW-1,compliant\nW-2,compliant\nW-3,MARGIN_TOO_LOW\nW-4,VINTAGE_INVALID\nW-5,SUPPLIER_MISMATCH\nW-6,compliant\nFINDINGSEOF"
+      "command": "cat > wine_findings.csv << 'FINDINGSEOF'\nwine_id,finding\nW-01,compliant\nW-02,compliant\nW-03,MARGIN_TOO_LOW\nW-04,VINTAGE_INVALID\nW-05,SUPPLIER_MISMATCH\nW-06,compliant\nW-07,MARGIN_TOO_LOW\nW-08,compliant\nW-09,compliant\nW-10,MARGIN_TOO_LOW\nW-11,compliant\nW-12,compliant\nW-13,MARGIN_TOO_LOW\nW-14,VINTAGE_INVALID\nW-15,VINTAGE_INVALID\nW-16,SUPPLIER_MISMATCH\nW-17,MARGIN_TOO_LOW\nW-18,compliant\nW-19,SUPPLIER_MISMATCH\nW-20,MARGIN_TOO_LOW\nW-21,MARGIN_TOO_LOW\nW-22,VINTAGE_INVALID|SUPPLIER_MISMATCH\nW-23,MARGIN_TOO_LOW|SUPPLIER_MISMATCH\nW-24,compliant\nW-25,MARGIN_TOO_LOW|VINTAGE_INVALID\nW-26,compliant\nW-27,compliant\nW-28,MARGIN_TOO_LOW\nW-29,VINTAGE_INVALID\nW-30,compliant\nW-31,compliant\nW-32,MARGIN_TOO_LOW\nW-33,compliant\nW-34,compliant\nW-35,MARGIN_TOO_LOW\nW-36,MARGIN_TOO_LOW\nW-37,compliant\nW-38,SUPPLIER_MISMATCH\nW-39,compliant\nW-40,MARGIN_TOO_LOW\nFINDINGSEOF"
     }
   },
   {
     "name": "bash",
     "server": "local",
     "arguments": {
-      "command": "cat > wine_memo.md << 'MEMOEOF'\n# Wine purchasing and margin audit\n\n6 wines reviewed against WM-STD-1. 3 carry a finding and 3 are compliant.\n\n| Wine | Code | Why |\n|---|---|---|\n| `W-3` | MARGIN_TOO_LOW | Pinot at 13.3 pct margin, below the 20 pct minimum |\n| `W-4` | VINTAGE_INVALID | 2026 vintage outside 2000-2025 |\n| `W-5` | SUPPLIER_MISMATCH | supplier WrongCo where the manifest expects NapaCo |\n\n## Wines that look low-margin and are not findings\n\n`W-2` (Bordeaux) is a futures wine at 10.0 pct margin. WM1 exempts futures (pre-arrival) wines from the margin minimum, so it is compliant. Reporting it would overstate the finding count.\nMEMOEOF"
+      "command": "cat > wine_memo.md << 'MEMOEOF'\n# Wine purchasing and margin audit \u2014 review year 2025\n\n40 wines reviewed against WM-STD-1 (one per wine_id; only the active purchasing line read). 23 carry a finding and 17 are compliant. Margin shortfall total 14.37.\n\n| Wine | Finding | Why |\n|---|---|---|\n| `W-03` | MARGIN_TOO_LOW | 5.59 pct on a landed cost of 16.10 (still minimum 20 pct), shortfall 2.32 |\n| `W-04` | VINTAGE_INVALID | vintage 2026 outside 2000-2025 |\n| `W-05` | SUPPLIER_MISMATCH | supplier Napa Valley Co where the manifest expects Napa Ridge Imports |\n| `W-07` | MARGIN_TOO_LOW | 22.22 pct on a landed cost of 10.80 (sparkling minimum 25 pct), shortfall 0.30 |\n| `W-10` | MARGIN_TOO_LOW | 18.90 pct on a landed cost of 16.40 (still minimum 20 pct), shortfall 0.18 |\n| `W-13` | MARGIN_TOO_LOW | 11.11 pct on a landed cost of 46.80 (still minimum 20 pct), shortfall 4.16 |\n| `W-14` | VINTAGE_INVALID | vintage 1997 outside 2000-2025 |\n| `W-15` | VINTAGE_INVALID | NV where the manifest does not allow non-vintage |\n| `W-16` | SUPPLIER_MISMATCH | supplier Mosel Handel where the manifest has no entry for this wine |\n| `W-17` | MARGIN_TOO_LOW | 7.53 pct on a landed cost of 37.20 (still minimum 20 pct), shortfall 4.64 |\n| `W-19` | SUPPLIER_MISMATCH | supplier Left Bank Brokers where the manifest expects Bordeaux Negoce |\n| `W-20` | MARGIN_TOO_LOW | 24.37 pct on a landed cost of 11.90 (sparkling minimum 25 pct), shortfall 0.08 |\n| `W-21` | MARGIN_TOO_LOW | 19.96 pct on a landed cost of 25.00 (still minimum 20 pct), shortfall 0.01 |\n| `W-22` | VINTAGE_INVALID|SUPPLIER_MISMATCH | vintage 2026 outside 2000-2025; supplier Finger Lakes Co where the manifest expects Willamette Partners |\n| `W-23` | MARGIN_TOO_LOW|SUPPLIER_MISMATCH | 14.04 pct on a landed cost of 11.40 (still minimum 20 pct), shortfall 0.68; supplier Rioja Direct SL where the manifest expects Rioja Direct |\n| `W-25` | MARGIN_TOO_LOW|VINTAGE_INVALID | 17.65 pct on a landed cost of 10.20 (still minimum 20 pct), shortfall 0.24; vintage 1999 outside 2000-2025 |\n| `W-28` | MARGIN_TOO_LOW | 17.12 pct on a landed cost of 27.75 (fortified minimum 18 pct), shortfall 0.25 |\n| `W-29` | VINTAGE_INVALID | vintage 2027 outside 2000-2026 |\n| `W-32` | MARGIN_TOO_LOW | 15.67 pct on a landed cost of 26.80 (still minimum 20 pct), shortfall 1.16 |\n| `W-35` | MARGIN_TOO_LOW | 23.86 pct on a landed cost of 8.80 (sparkling minimum 25 pct), shortfall 0.10 |\n| `W-36` | MARGIN_TOO_LOW | 17.07 pct on a landed cost of 16.40 (fortified minimum 18 pct), shortfall 0.15 |\n| `W-38` | SUPPLIER_MISMATCH | supplier Loire Direct where the manifest expects Bordeaux Negoce |\n| `W-40` | MARGIN_TOO_LOW | 18.95 pct on a landed cost of 9.50 (still minimum 20 pct), shortfall 0.10 |\n\n## Wines a plain margin check would flag that the policy does not\n\n- `W-02` (Pauillac Grand Cru): 5.4 pct against a 20 pct minimum, but it is a futures (pre-arrival) wine with an open allocation, which WM1 exempts from the margin minimum. The exemption covers WM1 only.\n- `W-29` (Hermitage): -0.3 pct against a 20 pct minimum, but it is a futures (pre-arrival) wine with an open allocation, which WM1 exempts from the margin minimum. The exemption covers WM1 only.\n- `W-30` (Grenache Gris): 5.8 pct against a 20 pct minimum, but it is a futures (pre-arrival) wine with an open allocation, which WM1 exempts from the margin minimum. The exemption covers WM1 only.\nMEMOEOF"
     }
   },
   {
     "name": "bash",
     "server": "local",
     "arguments": {
-      "command": "cat > results.json << 'RESULTSEOF'\n{\n  \"wine_count\": 6,\n  \"margin_too_low_count\": 1,\n  \"vintage_invalid_count\": 1,\n  \"supplier_mismatch_count\": 1,\n  \"compliant_count\": 3\n}\nRESULTSEOF"
+      "command": "cat > results.json << 'RESULTSEOF'\n{\n  \"wine_count\": 40,\n  \"margin_too_low_count\": 14,\n  \"vintage_invalid_count\": 6,\n  \"supplier_mismatch_count\": 6,\n  \"compliant_count\": 17,\n  \"margin_shortfall_total\": 14.37\n}\nRESULTSEOF"
     }
   },
   {

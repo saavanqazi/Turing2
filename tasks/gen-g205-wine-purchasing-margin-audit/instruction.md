@@ -1,12 +1,12 @@
 # Task
 
-We are running the wine purchasing and margin dashboard and I want to know which wines do not meet the margin policy. Go through `wine_purchases.csv` against WM-STD-1 and the manifest in `wine_manifest.csv`, using the policy as the authority for margin, vintage and supplier. Save `wine_findings.csv` with the columns `wine_id,finding`, one row per wine, where `finding` is `compliant`, `MARGIN_TOO_LOW`, `VINTAGE_INVALID` or `SUPPLIER_MISMATCH` (joined with `|` if more than one). Then write `wine_memo.md` explaining each finding and the wine that looks low-margin and is not. File layout is in `input/submission_format.md`.
+I am refreshing the wine purchasing and margin dashboard ahead of the 2025 review and I need the list of wines that do not meet the margin policy. The purchasing export is `wine_purchases.csv`; I have put the policy (WM-STD-1), the wine manifest and the supplier freight terms alongside it. Please review every wine against the policy, treating it as the authority on margin, vintage and supplier and reading the manifest and the terms the way the policy says to. Give me `wine_findings.csv`, one row per wine with its finding, and `wine_memo.md` explaining each finding and calling out the wines a plain margin check would flag that the policy does not. Then put the headline figures in `results.json`. File layout is in `input/submission_format.md`.
 
 ---
 Save your deliverables into your current working directory using exactly these filenames:
     - `wine_findings.csv` — One row per wine with its finding
-    - `wine_memo.md` — Markdown memo on the findings and the trap
-    - `results.json` — a JSON object with the keys `wine_count`, `margin_too_low_count`, `vintage_invalid_count`, `supplier_mismatch_count`, `compliant_count`
+    - `wine_memo.md` — Markdown memo on the findings and the exemptions
+    - `results.json` — a JSON object with the keys `wine_count`, `margin_too_low_count`, `vintage_invalid_count`, `supplier_mismatch_count`, `compliant_count`, `margin_shortfall_total`
 - The exact headers, key sets, allowed values and worked examples are specified in `input/submission_format.md` — follow it precisely.
 - Writing those files is the required deliverable and must be your final action; confirm each one exists before you answer.
 
