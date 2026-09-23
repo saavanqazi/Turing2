@@ -5,7 +5,7 @@ from typing import Any
 from pydantic import RootModel, field_validator
 
 from ..models import StrictModel
-from ..source_types import SourceCommand, SourceContext
+from ..source_types import SourceDataError, SourceCommand, SourceContext
 
 
 class JsonReadFileInput(StrictModel):
@@ -63,7 +63,28 @@ class ReadFile(SourceCommand[JsonReadFileInput, JsonReadFileOutput]):
             json.JSONDecodeError: If the file content is not valid JSON.
         """
         resolved = context.resolve_path(source_input.path)
-        return JsonReadFileOutput.model_validate(json.loads(resolved.read_text(encoding="utf-8")))
+        # utf-8-sig, matching the csv/md/text sources: Excel, PowerShell and
+        # Notepad prefix a BOM, and plain utf-8 leaves it in the string so
+        # json.loads rejects an otherwise correct answer.
+        # ``json.loads`` keeps the LAST of two equal keys, so a wrong first
+        # copy and a correct last copy would grade as correct; a duplicate
+        # key is reported instead (same defect class as a duplicate CSV
+        # header column).
+        return JsonReadFileOutput.model_validate(
+            json.loads(
+                resolved.read_text(encoding="utf-8-sig"),
+                object_pairs_hook=_reject_duplicate_keys,
+            )
+        )
+
+
+def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            raise SourceDataError(f"duplicate key {key!r} in JSON object")
+        result[key] = value
+    return result
 
 
 COMMANDS = (ReadFile(),)

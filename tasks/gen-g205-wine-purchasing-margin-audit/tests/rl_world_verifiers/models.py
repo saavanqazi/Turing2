@@ -1,7 +1,17 @@
 import json
+import math
 from typing import Any, Literal
 
-from jsonpath_ng.ext import parse as jsonpath_parse
+from functools import lru_cache
+
+from jsonpath_ng.ext import parse as _jsonpath_parse_uncached
+
+# jsonpath_ng rebuilds its PLY LALR parse table on EVERY parse call, and every
+# check's path is parsed twice per replay (schema validation + extraction) —
+# measured 2026-09-02 as 96% of a replay's wall time (3.75s -> 0.072s warm with
+# this cache, verdicts byte-identical). parse() is pure in its string argument,
+# so memoization cannot change behavior.
+jsonpath_parse = lru_cache(maxsize=4096)(_jsonpath_parse_uncached)
 from pydantic import BaseModel, ConfigDict, Field, RootModel, field_validator, model_validator
 
 Comparison = Literal[
@@ -18,6 +28,8 @@ Comparison = Literal[
     "not_regex_match",
     "in_array",
     "not_in_array",
+    "table_equals",
+    "object_equals",
 ]
 
 
@@ -292,18 +304,217 @@ def validate_deterministic_expected(expected: Any, comparison: Comparison) -> No
         raise ValueError(f"{comparison} expected value must be an array")
     if comparison in {"regex_match", "not_regex_match"} and not isinstance(expected, str):
         raise ValueError(f"{comparison} expected value must be a regex string")
+    if comparison == "table_equals":
+        validate_table_equals_expected(expected)
+    if comparison == "object_equals":
+        validate_object_equals_expected(expected)
+    # Gold is static config, so this is validated once at load rather than on
+    # every comparison. nan/inf here is an authoring mistake: every comparison
+    # against them is misleading rather than merely wrong.
+    if has_non_finite(expected):
+        raise ValueError(f"{comparison} expected value contains a non-finite number")
+
+
+#: The four value types of the 2026-09-03 equivalence contract. ``number``
+#: parses then compares within a tolerance, ``text`` strips + casefolds +
+#: collapses whitespace, ``id`` strips only, ``date`` canonicalises to
+#: YYYY-MM-DD. The normalisers live in ``compare``; this is the vocabulary.
+CELL_TYPES = ("number", "text", "id", "date", "json_number")
+
+#: Every key a table_equals expected object may carry.
+TABLE_EQUALS_KEYS = frozenset(
+    {"id_column", "rows", "row_set", "columns", "row_set_ordered", "columns_ordered", "numeric_tolerance",
+     "id_pattern", "cell_types"}
+)
+
+#: Every key an object_equals expected object may carry.
+OBJECT_EQUALS_KEYS = frozenset({"keys", "closed"})
+
+#: Every key one object_equals ``keys`` entry may carry.
+OBJECT_EQUALS_KEY_SPEC_KEYS = frozenset({"value", "tolerance", "type", "unordered"})
+
+
+def validate_table_equals_expected(expected: Any) -> None:
+    """Validates the ``table_equals`` expected object at schema parse time.
+
+    Mirrors the vendored b21 checks (``id_column``, ``rows``, ``row_set``) and
+    adds the hardened options: closed ``columns``, ``row_set_ordered``,
+    ``numeric_tolerance`` and the contract's ``cell_types`` (column ->
+    ``number`` | ``text`` | ``id`` | ``date``). Unknown keys are rejected so a
+    typo cannot silently weaken a verifier.
+
+    Args:
+        expected: Expected value from the verifier assertion.
+
+    Raises:
+        ValueError: If the expected object cannot be used by ``table_equals``.
+    """
+    if not isinstance(expected, dict) or not isinstance(expected.get("id_column"), str) \
+            or not isinstance(expected.get("rows"), dict):
+        raise ValueError(
+            "table_equals expected value must be an object with a string "
+            "'id_column' and a 'rows' mapping of record id -> {column: cell}"
+        )
+    unknown = sorted(set(expected) - TABLE_EQUALS_KEYS)
+    if unknown:
+        raise ValueError(f"table_equals expected has unknown keys: {', '.join(unknown)}")
+    for record_id, cells in expected["rows"].items():
+        if not isinstance(cells, dict) or not all(
+            isinstance(cell, str) for cell in cells.values()
+        ):
+            raise ValueError(
+                f"table_equals rows[{record_id!r}] must map column names to "
+                "string cell values"
+            )
+    row_set = expected.get("row_set")
+    if "row_set" in expected and (
+        not isinstance(row_set, list) or not all(isinstance(item, str) for item in row_set)
+    ):
+        raise ValueError("table_equals 'row_set' must be a list of record id strings")
+    if "columns_ordered" in expected:
+        if not isinstance(expected["columns_ordered"], bool):
+            raise ValueError("table_equals 'columns_ordered' must be a boolean")
+        if expected["columns_ordered"] and expected.get("columns") is None:
+            raise ValueError("table_equals 'columns_ordered' requires 'columns'")
+    if "row_set_ordered" in expected:
+        if not isinstance(expected["row_set_ordered"], bool):
+            raise ValueError("table_equals 'row_set_ordered' must be a boolean")
+        if expected["row_set_ordered"] and row_set is None:
+            raise ValueError("table_equals 'row_set_ordered' requires 'row_set'")
+    if "columns" in expected:
+        columns = expected["columns"]
+        if (
+            not isinstance(columns, list)
+            or not columns
+            or not all(isinstance(column, str) for column in columns)
+        ):
+            raise ValueError("table_equals 'columns' must be a non-empty list of column names")
+        if expected["id_column"] not in columns:
+            raise ValueError("table_equals 'columns' must include the id_column")
+    if "id_pattern" in expected:
+        import re as _re
+        if not isinstance(expected["id_pattern"], str):
+            raise ValueError("table_equals 'id_pattern' must be a regex string")
+        try:
+            _re.compile(expected["id_pattern"])
+        except _re.error as exc:
+            raise ValueError(f"table_equals 'id_pattern' is not a valid regex: {exc}") from exc
+    if "numeric_tolerance" in expected:
+        tolerance = expected["numeric_tolerance"]
+        if not is_json_number(tolerance) or tolerance < 0:
+            raise ValueError("table_equals 'numeric_tolerance' must be a non-negative number")
+    if "cell_types" in expected:
+        cell_types = expected["cell_types"]
+        if not isinstance(cell_types, dict) or not all(
+            isinstance(column, str) and column.strip() for column in cell_types
+        ):
+            raise ValueError(
+                "table_equals 'cell_types' must map column names to one of "
+                + ", ".join(CELL_TYPES)
+            )
+        for column, cell_type in cell_types.items():
+            if cell_type not in CELL_TYPES:
+                raise ValueError(
+                    f"table_equals cell_types[{column!r}] must be one of "
+                    + ", ".join(CELL_TYPES) + f", got {cell_type!r}"
+                )
+
+
+def validate_object_equals_expected(expected: Any) -> None:
+    """Validates the ``object_equals`` expected object at schema parse time.
+
+    Mirrors the vendored b21 checks (``keys`` with per-key ``value`` and
+    number-or-null ``tolerance``) and adds: unknown keys rejected, ``closed``
+    must be boolean, tolerances must be non-negative and only accompany
+    numeric values (a JSON number, a list of them, or a key typed ``number``),
+    the contract's per-key ``type`` (``number`` | ``text`` | ``id`` |
+    ``date``) and ``unordered`` (boolean, list values only).
+
+    Args:
+        expected: Expected value from the verifier assertion.
+
+    Raises:
+        ValueError: If the expected object cannot be used by ``object_equals``.
+    """
+    if not isinstance(expected, dict) or not isinstance(expected.get("keys"), dict):
+        raise ValueError(
+            "object_equals expected value must be an object with a 'keys' "
+            "mapping of key -> {'value': ..., 'tolerance': number|null}"
+        )
+    unknown = sorted(set(expected) - OBJECT_EQUALS_KEYS)
+    if unknown:
+        raise ValueError(f"object_equals expected has unknown keys: {', '.join(unknown)}")
+    if "closed" in expected and not isinstance(expected["closed"], bool):
+        raise ValueError("object_equals 'closed' must be a boolean")
+    for key, spec in expected["keys"].items():
+        if not isinstance(spec, dict) or "value" not in spec:
+            raise ValueError(f"object_equals keys[{key!r}] must carry a 'value'")
+        unknown_spec = sorted(set(spec) - OBJECT_EQUALS_KEY_SPEC_KEYS)
+        if unknown_spec:
+            raise ValueError(
+                f"object_equals keys[{key!r}] has unknown keys: {', '.join(unknown_spec)}"
+            )
+        value = spec["value"]
+        value_type = spec.get("type")
+        if value_type is not None and value_type not in CELL_TYPES:
+            raise ValueError(
+                f"object_equals keys[{key!r}] type must be one of "
+                + ", ".join(CELL_TYPES) + f", got {value_type!r}"
+            )
+        if "unordered" in spec:
+            if not isinstance(spec["unordered"], bool):
+                raise ValueError(f"object_equals keys[{key!r}] 'unordered' must be a boolean")
+            if spec["unordered"] and not isinstance(value, list):
+                raise ValueError(
+                    f"object_equals keys[{key!r}] 'unordered' requires a list value"
+                )
+        tolerance = spec.get("tolerance")
+        if tolerance is None:
+            continue
+        if not is_json_number(tolerance) or tolerance < 0:
+            raise ValueError(
+                f"object_equals keys[{key!r}] tolerance must be a non-negative number or null"
+            )
+        numeric_value = is_json_number(value) or value_type == "number" or (
+            isinstance(value, list) and bool(value) and all(is_json_number(v) for v in value)
+        )
+        if not numeric_value:
+            raise ValueError(
+                f"object_equals keys[{key!r}] tolerance requires a numeric value "
+                "(or type 'number')"
+            )
+
+
+def has_non_finite(value: Any) -> bool:
+    """Checks for a non-finite float anywhere in a JSON value.
+
+    Args:
+        value: Scalar, list, or dict to inspect.
+
+    Returns:
+        True when any nested float is nan/inf/-inf.
+    """
+    if isinstance(value, float):
+        return not math.isfinite(value)
+    if isinstance(value, (list, tuple)):
+        return any(has_non_finite(item) for item in value)
+    if isinstance(value, dict):
+        return any(has_non_finite(item) for item in value.values())
+    return False
 
 
 def is_json_number(value: Any) -> bool:
-    """Checks whether a value is a JSON number in Python form.
+    """Checks whether a value is a finite JSON number in Python form.
 
     Args:
         value: Value to inspect.
 
     Returns:
-        True for integer and float values except booleans.
+        True for finite integer and float values except booleans.
     """
-    return isinstance(value, (int, float)) and not isinstance(value, bool)
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return False
+    return math.isfinite(value)
 
 
 class VerifierDefinition(StrictModel):

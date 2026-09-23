@@ -103,6 +103,23 @@ def verify_deterministic(
         matches = extract_jsonpath_values(source_data, assertion.deterministic.path)
         actual = actual_from_matches(matches)
         evaluation["matched_values"] = jsonable(matches)
+        if _asserts_absence(assertion.deterministic.comparison) and _was_truncated(source_data):
+            # A negative comparator claims forbidden content is absent. The source
+            # cut its read at max_content_chars, so the content it would have
+            # matched may simply be past the cut -- absence cannot be established
+            # from a partial read, and passing here would be passing for the wrong
+            # reason.
+            return result_entry(
+                definition,
+                success=False,
+                expected=assertion.expected,
+                actual=actual,
+                effective_weight=effective_weight,
+                error=None,
+                reason="source was truncated; absence cannot be established from a partial read",
+                evaluation=evaluation,
+                source_data=source_data,
+            )
         if not matches:
             # Negative comparators assert the ABSENCE of forbidden content, so a
             # path that matches nothing satisfies them; positive comparators still
@@ -246,6 +263,21 @@ def verify_rubric(
             evaluation={"judge_models": config.models or [], "true_count": 0, "false_count": 0, "attempts": []},
             source_data=source_data,
         )
+
+
+def _asserts_absence(comparison: str) -> bool:
+    """Whether a comparator asserts that something is NOT present."""
+    return comparison in (
+        "not_equals",
+        "not_contains",
+        "not_in_array",
+        "not_regex_match",
+    )
+
+
+def _was_truncated(source_data: Any) -> bool:
+    """Whether the source reported cutting its read at the content limit."""
+    return isinstance(source_data, dict) and source_data.get("truncated") is True
 
 
 def result_entry(

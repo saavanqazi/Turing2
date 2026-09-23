@@ -4,10 +4,10 @@
 
 | Wine | Code | Why |
 |---|---|---|
-| `W-3` | MARGIN_TOO_LOW | Pinot at 13.3 pct margin below the 20 pct minimum |
-| `W-4` | VINTAGE_INVALID | 2026 vintage outside the 2000-2025 range |
-| `W-5` | SUPPLIER_MISMATCH | WrongCo where the manifest requires NapaCo |
+| `W-3` | MARGIN_TOO_LOW | Pinot at 13.3 pct margin, below the 20 pct minimum |
+| `W-4` | VINTAGE_INVALID | 2026 vintage outside 2000-2025 |
+| `W-5` | SUPPLIER_MISMATCH | supplier WrongCo where the manifest expects NapaCo |
 
-## The wine that looks low-margin and is not
+## Wines that look low-margin and are not findings
 
-`W-2` is a futures Bordeaux with a 10 pct margin. WM1 makes futures wines exempt from the margin rule, so the low margin is compliant. Reporting it would overstate the finding count.
+`W-2` (Bordeaux) is a futures wine at 10.0 pct margin. WM1 exempts futures (pre-arrival) wines from the margin minimum, so it is compliant. Reporting it would overstate the finding count.

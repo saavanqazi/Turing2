@@ -17,9 +17,14 @@ class TextExtractTextOutput(StrictModel):
 
     Attributes:
         text: Raw UTF-8 text.
+        truncated: Whether the file was longer than the source content limit
+            and the text above is only its leading portion. A negative
+            assertion cannot be satisfied by content that was cut, so the
+            runner needs to know a read was partial.
     """
 
     text: str
+    truncated: bool = False
 
 
 class ExtractText(SourceCommand[TextExtractTextInput, TextExtractTextOutput]):
@@ -47,7 +52,9 @@ class ExtractText(SourceCommand[TextExtractTextInput, TextExtractTextOutput]):
 
         """
         resolved = context.resolve_path(source_input.path)
-        return TextExtractTextOutput(text=resolved.read_text(encoding="utf-8-sig")[: context.max_content_chars])
+        raw = resolved.read_text(encoding="utf-8-sig")
+        limit = context.max_content_chars
+        return TextExtractTextOutput(text=raw[:limit], truncated=len(raw) > limit)
 
 
 COMMANDS = (ExtractText(),)

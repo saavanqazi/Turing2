@@ -19,11 +19,16 @@ class FilesystemCheckPathExistsOutput(StrictModel):
         exists: Whether the path exists.
         is_file: Whether the path exists and is a regular file.
         is_directory: Whether the path exists and is a directory.
+        size: Size in bytes. For a regular file this is the file size; for a
+            directory or a non-existent path this is 0. A verifier can assert
+            ``$.size > 0`` to reject empty (0-byte) deliverables that pass
+            ``$.is_file == true`` without carrying any real content.
     """
 
     exists: bool
     is_file: bool
     is_directory: bool
+    size: int
 
 
 class CheckPathExists(SourceCommand[FilesystemCheckPathExistsInput, FilesystemCheckPathExistsOutput]):
@@ -45,13 +50,15 @@ class CheckPathExists(SourceCommand[FilesystemCheckPathExistsInput, FilesystemCh
             context: Source runtime context.
 
         Returns:
-            Path existence and type output.
+            Path existence, type, and size output.
         """
         resolved = context.resolve_path(source_input.path)
+        is_file = resolved.is_file()
         return FilesystemCheckPathExistsOutput(
             exists=resolved.exists(),
-            is_file=resolved.is_file(),
+            is_file=is_file,
             is_directory=resolved.is_dir(),
+            size=resolved.stat().st_size if is_file else 0,
         )
 
 

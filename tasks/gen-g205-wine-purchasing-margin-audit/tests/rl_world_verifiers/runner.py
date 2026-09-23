@@ -7,6 +7,7 @@ from typing import Any
 from pydantic import ValidationError
 
 from .models import VerifierSpec, effective_weights
+from .source_types import DEFAULT_LOOKUP_ORDER
 from .sources.registry import SourceRegistry
 from .verifiers import VerifierInfrastructureError, verify_definition
 
@@ -26,7 +27,9 @@ def load_spec(path: Path) -> VerifierSpec:
         ValueError: If the JSON content does not match the v3 schema.
     """
     try:
-        return VerifierSpec.model_validate_json(path.read_text(encoding="utf-8"))
+        # utf-8-sig: a verifier.json saved by a Windows editor carries a BOM,
+        # which plain utf-8 leaves in the string and the whole spec fails to load.
+        return VerifierSpec.model_validate_json(path.read_text(encoding="utf-8-sig"))
     except ValidationError as exc:
         raise ValueError(f"invalid verifier schema: {exc}") from exc
 
@@ -40,6 +43,9 @@ def run_verifier(
     llm_completion: Callable[..., Any] | None = None,
     max_content_chars: int = 90000,
     seeded_input_paths: tuple[str, ...] | list[str] = (),
+    lookup_order: tuple[str, ...] | list[str] = DEFAULT_LOOKUP_ORDER,
+    trusted_input_dir: Path | None = None,
+    trusted_reference_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Runs all verifiers from a spec and writes output artifacts.
 
@@ -54,7 +60,13 @@ def run_verifier(
             tests.
         max_content_chars: Maximum text content returned by file sources.
         seeded_input_paths: Exact workspace-relative task inputs seeded by the
-            harness. Used only by dedicated reconciliation sources.
+            harness. Used only by dedicated source commands.
+        lookup_order: Ordered rungs used to locate a declared deliverable path.
+            Defaults to ``DEFAULT_LOOKUP_ORDER``.
+        trusted_input_dir: Optional clean snapshot of declared task inputs for
+            executable checks. This must not be the agent-visible workspace.
+        trusted_reference_dir: Optional verifier-private gold-artifact root.
+            This must never be the agent-visible workspace or input directory.
 
     Returns:
         The verifier reward payload written to reward.json.
@@ -77,6 +89,9 @@ def run_verifier(
             agent_logs_dir=agent_logs_dir,
             max_content_chars=max_content_chars,
             seeded_input_paths=seeded_input_paths,
+            trusted_input_dir=trusted_input_dir,
+            trusted_reference_dir=trusted_reference_dir,
+            lookup_order=lookup_order,
         )
         weights = effective_weights(spec.verifiers)
         for definition in spec.verifiers:

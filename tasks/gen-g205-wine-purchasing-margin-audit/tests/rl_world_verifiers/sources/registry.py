@@ -7,6 +7,7 @@ from pydantic import ValidationError
 
 from ..models import Source, VerifierSpec
 from ..source_types import (
+    DEFAULT_LOOKUP_ORDER,
     RegisteredSource,
     SourceAuthoringError,
     SourceCommand,
@@ -15,9 +16,12 @@ from ..source_types import (
 )
 from . import (
     artifacts,
+    code,
     csv,
     docx,
+    figma,
     filesystem,
+    html,
     json,
     md,
     pdf,
@@ -29,6 +33,8 @@ from . import (
 
 SOURCE_NAMESPACE_MODULES = (
     filesystem,
+    code,
+    html,
     json,
     docx,
     xlsx,
@@ -37,6 +43,7 @@ SOURCE_NAMESPACE_MODULES = (
     text,
     md,
     csv,
+    figma,
     response,
     artifacts,
 )
@@ -64,6 +71,9 @@ class SourceRegistry:
         agent_logs_dir: Path | None = None,
         max_content_chars: int = 90000,
         seeded_input_paths: tuple[str, ...] | list[str] = (),
+        lookup_order: tuple[str, ...] | list[str] = DEFAULT_LOOKUP_ORDER,
+        trusted_input_dir: Path | None = None,
+        trusted_reference_dir: Path | None = None,
     ):
         """Initializes the source registry.
 
@@ -75,8 +85,12 @@ class SourceRegistry:
             max_content_chars: Maximum text content returned by document
                 sources.
             seeded_input_paths: Exact workspace-relative source files seeded
-                by the harness. Only dedicated reconciliation sources can
-                resolve these paths.
+                by the harness. Only dedicated commands can resolve these paths.
+            lookup_order: Ordered rungs used to locate a declared deliverable
+                path. Defaults to :data:`DEFAULT_LOOKUP_ORDER`.
+            trusted_input_dir: Optional clean, post-agent snapshot of declared
+                task inputs used by executable code checks.
+            trusted_reference_dir: Optional verifier-private gold-artifact root.
 
         Raises:
             ValueError: If two source commands resolve to the same dotted name.
@@ -86,6 +100,9 @@ class SourceRegistry:
             agent_logs_dir=agent_logs_dir,
             max_content_chars=max_content_chars,
             seeded_input_paths=tuple(seeded_input_paths),
+            trusted_input_dir=trusted_input_dir,
+            trusted_reference_dir=trusted_reference_dir,
+            lookup_order=tuple(lookup_order),
         )
         self._sources: dict[str, RegisteredSource] = {}
         for module in SOURCE_NAMESPACE_MODULES:
