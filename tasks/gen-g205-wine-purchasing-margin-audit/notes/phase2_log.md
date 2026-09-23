@@ -61,7 +61,17 @@ per-wine regex checks (superseded by `findings_table`), `futures_not_flagged`
 | quoted cells, `Compliant`, CRLF | 1.0 | — |
 | rows reordered | 1.0 | — |
 
-## Still to run on a machine with harbor + the LiteLLM key
+## Harbor results (Windows host, 2026-09-23)
+
+| Job | Package | Reward |
+|---|---|---|
+| `oracle-g205-baseline` | d3eddf8 (mined) | 1.0 |
+| `glm-g205-baseline` | d3eddf8 (mined), terminus-2, GLM-5.2, -k 4 | 1.0, 1.0, 1.0, 1.0 (4/4) |
+| `oracle-g205-r0` | 07fe3c8 (new grader) | 1.0, 0 exceptions, 12 s |
+
+No GLM battery for r0: the answer and difficulty are unchanged from the baseline.
+
+## Commands used
 
 ```
 source ~/.config/harbor/env

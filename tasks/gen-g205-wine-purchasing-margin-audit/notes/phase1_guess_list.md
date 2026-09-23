@@ -34,5 +34,7 @@ Verifier coverage (forward / backward) against the mined `tests/verifier.json`:
 
 Baseline evidence (this container has no docker daemon / harbor / GLM key):
 - Local engine replay of the gold through the mined grader: 15/15 pass (see phase1 log).
-- Harbor oracle (`oracle-g205-baseline`) and GLM battery (`glm-g205-baseline`, -k 4) still
-  to be run on a machine with harbor + the LiteLLM key; record rewards here when done.
+- Harbor oracle `oracle-g205-baseline` (worktree at d3eddf8, 2026-09-23): reward 1.0, 0 exceptions, 14 s.
+- GLM-5.2 battery `glm-g205-baseline` (terminus-2, openai/glm-5.2, -k 4 -n 2, 2026-09-23):
+  **4/4 passed, rewards 1.0, 1.0, 1.0, 1.0**, 0 exceptions, 4 m 15 s. Too easy, as expected.
+  Trial folder names: see jobs\glm-g205-baseline\task__* (record in review.csv).
