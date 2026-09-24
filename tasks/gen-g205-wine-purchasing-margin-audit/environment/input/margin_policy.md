@@ -2,7 +2,8 @@
 
 Binding for the purchasing table `wine_purchases.csv`. Where a wine line, the manifest
 (`wine_manifest.csv`) or the supplier terms (`supplier_terms.csv`) and this policy disagree,
-the policy decides. The manifest names each wine's category, its expected supplier and, where
+the policy decides. The buyer's notes (`purchasing_notes.md`) record changes to the manifest
+or to a supplier's terms made during the review year. The manifest names each wine's category, its expected supplier and, where
 one is approved, an alternate supplier; for a futures wine it also records whether the
 allocation is `open` or `closed`. The supplier terms give each supplier's freight.
 
@@ -15,6 +16,9 @@ allocation is `open` or `closed`. The supplier terms give each supplier's freigh
   manifest entry, the entry with the latest `effective_from` on or before the last day of the
   review year (31 December 2025) governs; an entry dated after that day is not in force for
   this review.
+- A note in `purchasing_notes.md` takes effect for purchasing lines dated (`po_date`) on or
+  after the note's date, and for those lines it prevails over the manifest and the supplier
+  terms. Lines dated before the note are read against the manifest and the terms as they stand.
 - Every rule in this policy is stated per bottle. A purchasing line gives its prices for the
   pack on that line (`pack`, bottles × bottle size); supplier freight is given on the basis the
   terms state.

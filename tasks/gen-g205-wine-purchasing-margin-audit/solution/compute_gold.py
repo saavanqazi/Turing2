@@ -39,6 +39,16 @@ COUNT_KEYS = {"MARGIN_TOO_LOW": "margin_too_low_count",
               "SUPPLIER_MISMATCH": "supplier_mismatch_count"}
 CENT = Decimal("0.01")
 
+# ---- purchasing_notes.md, mirrored here (the notes are prose; keep both in step) --------
+# A note applies to lines with po_date on or after its date and prevails over manifest/terms.
+NOTE_FREIGHT = {  # supplier -> (from_date, freight, basis, case_size)
+    "reims cellars": ("2025-02-02", Decimal("15.60"), "per case", Decimal(6)),
+    "tuscan vines": ("2025-06-01", Decimal("21.60"), "per case", Decimal(6)),
+}
+NOTE_ALLOCATION_OPEN = {"w-17": "2025-03-15"}                      # wine -> from_date
+NOTE_SUPPLIER_ALIAS = {"rioja direct sl": ("2025-04-20", "rioja direct")}  # invoiced -> (from, same as)
+NOTE_ALTERNATE_WITHDRAWN = {"left bank brokers": "2025-07-08"}    # alternate -> from_date
+
 
 def norm(value: str | None) -> str:
     """S0: trim surrounding whitespace, ignore letter case. Nothing else."""
@@ -97,9 +107,21 @@ def main() -> int:
         futures = norm(r["wine_type"]) == "futures"
         category = norm(m["category"]) if m else ""
         allocation = norm(m["allocation"]) if m else ""
+        po_date = r["po_date"].strip()
+
+        # S0 — buyer's notes prevail for lines dated on or after the note
+        per_bottle = freight[supplier]
+        if supplier in NOTE_FREIGHT and po_date >= NOTE_FREIGHT[supplier][0]:
+            _, amt, basis, case = NOTE_FREIGHT[supplier][0:1] + NOTE_FREIGHT[supplier][1:]
+            per_bottle = amt / case if basis == "per case" else amt
+        if key in NOTE_ALLOCATION_OPEN and po_date >= NOTE_ALLOCATION_OPEN[key]:
+            allocation = "open"
+        supplier_for_match = supplier
+        if supplier in NOTE_SUPPLIER_ALIAS and po_date >= NOTE_SUPPLIER_ALIAS[supplier][0]:
+            supplier_for_match = NOTE_SUPPLIER_ALIAS[supplier][1]
 
         # WM1 — landed cost on the invoiced supplier's freight; category minimum; open-futures exempt
-        landed = purchase + freight[supplier]
+        landed = purchase + per_bottle
         margin = (selling - landed) / landed * 100
         minimum = MIN_MARGIN[category] if category else None
         exempt = futures and allocation == "open"
@@ -119,9 +141,10 @@ def main() -> int:
             supplier_ok = False
         else:
             acceptable = {norm(m["expected_supplier"])}
-            if futures and norm(m["alternate_supplier"]):
-                acceptable.add(norm(m["alternate_supplier"]))
-            supplier_ok = supplier in acceptable
+            alt = norm(m["alternate_supplier"])
+            if futures and alt and not (alt in NOTE_ALTERNATE_WITHDRAWN and po_date >= NOTE_ALTERNATE_WITHDRAWN[alt]):
+                acceptable.add(alt)
+            supplier_ok = supplier_for_match in acceptable
 
         findings = []
         if low and not exempt:
@@ -140,7 +163,7 @@ def main() -> int:
         if "MARGIN_TOO_LOW" in findings:
             shortfall = cents(landed * (1 + minimum / 100) - selling)
             shortfall_total += shortfall
-            reasons.append(f"{margin:.2f} pct on a landed cost of {landed:.2f} ({category} minimum {minimum} pct), "
+            reasons.append(f"{margin:.2f} pct on a landed cost of {landed:.2f} (po {po_date}) ({category} minimum {minimum} pct), "
                            f"shortfall {shortfall:.2f}")
         if "VINTAGE_INVALID" in findings:
             limit = REVIEW_YEAR + (1 if futures else 0)
@@ -188,7 +211,7 @@ def main() -> int:
 
     # ---- golden trajectory (heredoc replay) ------------------------------------------
     reads = ["margin_policy.md", "wine_purchases.csv", "wine_manifest.csv", "supplier_terms.csv",
-             "submission_format.md"]
+             "purchasing_notes.md", "submission_format.md"]
     steps = [{"name": "bash", "server": "local", "arguments": {"command": f"cat input/{f}"}} for f in reads]
     for fname, text, tag in (("wine_findings.csv", csv_text, "FINDINGSEOF"),
                              ("wine_memo.md", memo_text, "MEMOEOF"),

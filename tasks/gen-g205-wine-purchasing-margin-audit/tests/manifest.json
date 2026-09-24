@@ -78,6 +78,9 @@
             "W-02": {
               "finding": "compliant"
             },
+            "W-17": {
+              "finding": "compliant"
+            },
             "W-29": {
               "finding": "VINTAGE_INVALID"
             },
@@ -98,7 +101,7 @@
     {
       "name": "findings_table",
       "metadata": {
-        "how_justification": "Parses wine_findings.csv with csv.read_rows and applies table_equals: every graded cell of 37 rows plus the full 40-row population as a row_set lock (a duplicated or missing wine fails the lock), and the delivered column set closed to the stated header, with the finding cell compared as text (case-insensitive, whitespace-collapsed). A failure names the exact row.",
+        "how_justification": "Parses wine_findings.csv with csv.read_rows and applies table_equals: every graded cell of 39 rows plus the full 43-row population as a row_set lock (a duplicated or missing wine fails the lock), and the delivered column set closed to the stated header, with the finding cell compared as text (case-insensitive, whitespace-collapsed). A failure names the exact row.",
         "why_justification": "Every wine's finding under WM1-WM3 on its governing line, with codes joined in policy order, is graded. Entailed by: \"One row per wine, keyed by `wine_id` as `wine_purchases.csv` writes it, in any order. A wine that appears on more than one line of the purchasing table is one wine and one row ... joined with `|` in policy order\"",
         "tag": "core"
       },
@@ -162,9 +165,6 @@
             "W-16": {
               "finding": "SUPPLIER_MISMATCH"
             },
-            "W-17": {
-              "finding": "MARGIN_TOO_LOW"
-            },
             "W-18": {
               "finding": "compliant"
             },
@@ -227,6 +227,15 @@
             },
             "W-40": {
               "finding": "MARGIN_TOO_LOW"
+            },
+            "W-41": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-42": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-43": {
+              "finding": "SUPPLIER_MISMATCH"
             }
           },
           "row_set": [
@@ -269,7 +278,10 @@
             "W-37",
             "W-38",
             "W-39",
-            "W-40"
+            "W-40",
+            "W-41",
+            "W-42",
+            "W-43"
           ],
           "columns": [
             "wine_id",
@@ -331,7 +343,7 @@
       },
       "assertion": {
         "type": "deterministic",
-        "expected": "(?s)(?=.*\\bW\\-03\\b)(?=.*\\bW\\-04\\b)(?=.*\\bW\\-07\\b)(?=.*\\bW\\-10\\b)(?=.*\\bW\\-13\\b)(?=.*\\bW\\-14\\b)(?=.*\\bW\\-15\\b)(?=.*\\bW\\-16\\b)(?=.*\\bW\\-17\\b)(?=.*\\bW\\-19\\b)(?=.*\\bW\\-20\\b)(?=.*\\bW\\-21\\b)(?=.*\\bW\\-22\\b)(?=.*\\bW\\-23\\b)(?=.*\\bW\\-25\\b)(?=.*\\bW\\-28\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-32\\b)(?=.*\\bW\\-35\\b)(?=.*\\bW\\-36\\b)(?=.*\\bW\\-38\\b)(?=.*\\bW\\-40\\b)",
+        "expected": "(?s)(?=.*\\bW\\-03\\b)(?=.*\\bW\\-04\\b)(?=.*\\bW\\-07\\b)(?=.*\\bW\\-10\\b)(?=.*\\bW\\-13\\b)(?=.*\\bW\\-14\\b)(?=.*\\bW\\-15\\b)(?=.*\\bW\\-16\\b)(?=.*\\bW\\-19\\b)(?=.*\\bW\\-20\\b)(?=.*\\bW\\-21\\b)(?=.*\\bW\\-22\\b)(?=.*\\bW\\-23\\b)(?=.*\\bW\\-25\\b)(?=.*\\bW\\-28\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-32\\b)(?=.*\\bW\\-35\\b)(?=.*\\bW\\-36\\b)(?=.*\\bW\\-38\\b)(?=.*\\bW\\-40\\b)(?=.*\\bW\\-41\\b)(?=.*\\bW\\-42\\b)(?=.*\\bW\\-43\\b)",
         "deterministic": {
           "path": "$.text",
           "comparison": "regex_match"
@@ -358,7 +370,7 @@
       },
       "assertion": {
         "type": "deterministic",
-        "expected": "(?s)(?=.*\\bW\\-02\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-30\\b)",
+        "expected": "(?s)(?=.*\\bW\\-02\\b)(?=.*\\bW\\-17\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-30\\b)",
         "deterministic": {
           "path": "$.text",
           "comparison": "regex_match"
@@ -440,11 +452,11 @@
         "expected": {
           "keys": {
             "wine_count": {
-              "value": 40,
+              "value": 43,
               "tolerance": null
             },
             "margin_too_low_count": {
-              "value": 14,
+              "value": 15,
               "tolerance": null
             },
             "vintage_invalid_count": {
@@ -452,15 +464,15 @@
               "tolerance": null
             },
             "supplier_mismatch_count": {
-              "value": 5,
+              "value": 6,
               "tolerance": null
             },
             "compliant_count": {
-              "value": 18,
+              "value": 19,
               "tolerance": null
             },
             "margin_shortfall_total": {
-              "value": 14.37,
+              "value": 16.14,
               "tolerance": 0.01
             }
           },

@@ -32,7 +32,7 @@ def solve(*, flat20=False, no_freight=False, expected_freight=False, first_wins=
           per_line=False, all_futures_exempt=False, alt_on_stock=False, round1dp=False, nv_invalid=False,
           case_sensitive=False, no_futures_year=False, count_lines=False, float_round=False,
           strip_only=False, pack_ignored=False, basis_ignored=False, manifest_last=False,
-          manifest_first=False, future_row_honoured=False):
+          manifest_first=False, future_row_honoured=False, notes_ignored=False, notes_global=False):
     n = (lambda s: (s or "").strip()) if (case_sensitive or strip_only) else (lambda s: (s or "").strip().casefold())
     manifest = {}
     for r in rows("wine_manifest.csv"):
@@ -71,18 +71,24 @@ def solve(*, flat20=False, no_freight=False, expected_freight=False, first_wins=
     out, counts, short = [], {"MARGIN_TOO_LOW": 0, "VINTAGE_INVALID": 0, "SUPPLIER_MISMATCH": 0}, Decimal("0")
     for wid, r in chosen:
         m = manifest.get(n(r["wine_id"]))
+        po = "9999-12-31" if notes_global else r["po_date"].strip()
         bottles = Decimal(1) if pack_ignored else Decimal(re.fullmatch(r"(\d+)x\d+cl", r["pack"].strip()).group(1))
         purchase, selling = Decimal(r["purchase_price"]) / bottles, Decimal(r["selling_price"]) / bottles
         sup = n(r["supplier"])
         futures = n(r["wine_type"]) == "futures"
         cat = n(m["category"]) if m else ""
         fr = Decimal("0") if no_freight else freight.get(n(m["expected_supplier"]) if (expected_freight and m) else sup, Decimal("0"))
+        if not notes_ignored:
+            if sup == "reims cellars" and po >= "2025-02-02": fr = Decimal("15.60") / 6
+            if sup == "tuscan vines" and po >= "2025-06-01": fr = Decimal("21.60") / 6
         landed = purchase + fr
         margin = (selling - landed) / landed * 100
         if round1dp:
             margin = margin.quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
         minimum = Decimal("20") if flat20 else (MIN_MARGIN[cat] if cat else None)
-        exempt = futures and (True if all_futures_exempt else (m is not None and n(m["allocation"]) == "open"))
+        alloc = n(m["allocation"]) if m else ""
+        if not notes_ignored and n(r["wine_id"]) == "w-17" and po >= "2025-03-15": alloc = "open"
+        exempt = futures and (True if all_futures_exempt else alloc == "open")
         low = minimum is not None and margin < minimum
         v = r["vintage"].strip()
         if v.upper() == "NV":
@@ -95,9 +101,13 @@ def solve(*, flat20=False, no_freight=False, expected_freight=False, first_wins=
             sok = False
         else:
             acc = {n(m["expected_supplier"])}
-            if (futures or alt_on_stock) and n(m["alternate_supplier"]):
-                acc.add(n(m["alternate_supplier"]))
-            sok = sup in acc
+            alt = n(m["alternate_supplier"])
+            withdrawn = (not notes_ignored) and alt == "left bank brokers" and po >= "2025-07-08"
+            if (futures or alt_on_stock) and alt and not withdrawn:
+                acc.add(alt)
+            sm = sup
+            if not notes_ignored and sup == "rioja direct sl" and po >= "2025-04-20": sm = "rioja direct"
+            sok = sm in acc
         f = []
         if low and not exempt:
             f.append("MARGIN_TOO_LOW")
@@ -151,6 +161,8 @@ PROBES = {
     "manifest: last row per wine wins (dict overwrite)": {"manifest_last": True},
     "manifest: first row per wine wins": {"manifest_first": True},
     "manifest: row dated after the review year honoured": {"future_row_honoured": True},
+    "buyer's notes ignored": {"notes_ignored": True},
+    "buyer's notes applied to every line regardless of date": {"notes_global": True},
 }
 
 if __name__ == "__main__":

@@ -116,4 +116,44 @@ for /d %d in (jobs\oracle-g205-r2\*) do @type "%d\verifier\reward.txt"
 harbor run -p tasks\gen-g205-wine-purchasing-margin-audit -a terminus-2 -m openai/glm-5.2 -k 8 -n 4 --env-file glm.env -o jobs --job-name glm-g205-r2 -y
 for /d %d in (jobs\glm-g205-r2\*) do @type "%d\verifier\reward.txt"
 ```
+Results (2026-09-24): `oracle-g205-r2` 1.0; `glm-g205-r2` terminus-2 -k 8 -n 4: **8/8, all 1.0**, 22 m 20 s. Still too easy.
+Read: pack, freight basis and dated manifest rows are all visible as columns, and a column is
+something GLM parses as readily as a clause. The lever that discriminated in the accepted
+bundle was prose overriding the tables; r3 adds that.
+
+---
+
+# Phase 3 — hardening round 3 ("r3")
+
+Round 3 changes the *kind* of information. A buyer's notes file in dated prose amends the
+manifest and the supplier terms from each note's date, so a wine's answer now depends on its
+own `po_date` against the note, per mechanism. The policy makes the notes binding in one S0
+clause; the notes themselves are the only place the changes appear.
+
+| Note (date) | Mechanism amended | Exercised by | Apply globally → | Ignore → |
+|---|---|---|---|---|
+| 2 Feb: Reims Cellars freight per case of 6 at 15.60 | freight basis | W-04 (2.60 either way) | no change | no change (a red herring that must be read and found harmless) |
+| 15 Mar: W-17 allocation reopened | WM1 exemption | W-17 (po 9 Jun) → exempt, compliant | — | W-17 MARGIN_TOO_LOW |
+| 20 Apr: Rioja Direct SL = Rioja Direct from today; earlier invoices stand | WM3 alias | W-23 (po 24 Mar) stays SUPPLIER_MISMATCH; W-42 (po 14 May) supplier ok | W-23 un-flagged | W-42 SUPPLIER_MISMATCH |
+| 1 Jun: Tuscan Vines 6-bottle cases, case freight unchanged | freight per bottle 1.80 → 3.60 | W-41 (po 20 Jun) 22.9 % → 6.6 % MARGIN_TOO_LOW; W-13, W-07 after; W-11, W-35, W-32 before | W-11 flagged | W-41 compliant |
+| 8 Jul: Left Bank Brokers no longer an alternate | WM3 alternate | W-43 (po 11 Aug) SUPPLIER_MISMATCH; W-18 (po 26 May) still fine | W-18 flagged | W-43 compliant |
+
+Other changes: three wines added (W-41 Vermentino, W-42 Garnacha, W-43 Saint-Julien 6x75cl
+futures); instruction names "my running notes from the year"; policy header and S0 gained the
+notes clause; gold generator mirrors the notes as constants (as the accepted bundle did for its
+store notices); probes gained "notes ignored" and "notes applied regardless of date".
+
+Answer r3: 43 wines, 15 MARGIN_TOO_LOW, 6 VINTAGE_INVALID, 6 SUPPLIER_MISMATCH, 19 compliant,
+shortfall total 16.14. Exempt low-margin wines: W-02, W-17, W-29, W-30.
+
+Local replay: `score.py` on gold 1.0 (10/10); `test_outputs.py` 20 lanes green; `tools/probes.py`
+faithful 1.0, all 21 shortcuts 0.0.
+
+Harbor runs for r3:
+```
+harbor run -p tasks\gen-g205-wine-purchasing-margin-audit -a oracle -k 1 -n 1 --env-file glm.env -o jobs --job-name oracle-g205-r3 -y
+for /d %d in (jobs\oracle-g205-r3\*) do @type "%d\verifier\reward.txt"
+harbor run -p tasks\gen-g205-wine-purchasing-margin-audit -a terminus-2 -m openai/glm-5.2 -k 8 -n 4 --env-file glm.env -o jobs --job-name glm-g205-r3 -y
+for /d %d in (jobs\glm-g205-r3\*) do @type "%d\verifier\reward.txt"
+```
 Results: (pending)
