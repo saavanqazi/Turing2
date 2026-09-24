@@ -9,8 +9,9 @@ Deliver exactly these files, in your working directory:
 ## `wine_findings.csv`
 
 Header, exactly: `wine_id,finding`
-One row per wine, keyed by `wine_id` as `wine_purchases.csv` writes it, in any order. A wine
-that appears on more than one line of the purchasing table is one wine and one row.
+One row per wine the policy reviews, keyed by `wine_id` as `wine_purchases.csv` writes it, in
+any order. A wine that appears on more than one line of the purchasing table is one wine and
+one row; a wine the policy places outside the review has no row.
 `finding` is `compliant` for a wine with no finding, otherwise the finding codes the wine
 carries, joined with `|` in policy order: `MARGIN_TOO_LOW`, then `VINTAGE_INVALID`, then
 `SUPPLIER_MISMATCH` (for example `MARGIN_TOO_LOW|SUPPLIER_MISMATCH`).
@@ -33,7 +34,7 @@ with the clause that exempts it.
 
 A JSON object with exactly these keys and nothing else:
 
-- `wine_count` — number: distinct wines reviewed (one per `wine_id`)
+- `wine_count` — number: distinct wines reviewed (one per `wine_id`; wines outside the review are not counted)
 - `margin_too_low_count` — number: wines carrying `MARGIN_TOO_LOW`
 - `vintage_invalid_count` — number: wines carrying `VINTAGE_INVALID`
 - `supplier_mismatch_count` — number: wines carrying `SUPPLIER_MISMATCH`

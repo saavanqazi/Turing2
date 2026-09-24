@@ -101,7 +101,7 @@
     {
       "name": "findings_table",
       "metadata": {
-        "how_justification": "Parses wine_findings.csv with csv.read_rows and applies table_equals: every graded cell of 39 rows plus the full 43-row population as a row_set lock (a duplicated or missing wine fails the lock), and the delivered column set closed to the stated header, with the finding cell compared as text (case-insensitive, whitespace-collapsed). A failure names the exact row.",
+        "how_justification": "Parses wine_findings.csv with csv.read_rows and applies table_equals: every graded cell of 127 rows plus the full 131-row population as a row_set lock (a duplicated or missing wine fails the lock), and the delivered column set closed to the stated header, with the finding cell compared as text (case-insensitive, whitespace-collapsed). A failure names the exact row.",
         "why_justification": "Every wine's finding under WM1-WM3 on its governing line, with codes joined in policy order, is graded. Entailed by: \"One row per wine, keyed by `wine_id` as `wine_purchases.csv` writes it, in any order. A wine that appears on more than one line of the purchasing table is one wine and one row ... joined with `|` in policy order\"",
         "tag": "core"
       },
@@ -236,6 +236,270 @@
             },
             "W-43": {
               "finding": "SUPPLIER_MISMATCH"
+            },
+            "W-44": {
+              "finding": "compliant"
+            },
+            "W-45": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-46": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-47": {
+              "finding": "compliant"
+            },
+            "W-48": {
+              "finding": "compliant"
+            },
+            "W-49": {
+              "finding": "compliant"
+            },
+            "W-50": {
+              "finding": "compliant"
+            },
+            "W-51": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-52": {
+              "finding": "compliant"
+            },
+            "W-53": {
+              "finding": "compliant"
+            },
+            "W-54": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-55": {
+              "finding": "compliant"
+            },
+            "W-56": {
+              "finding": "compliant"
+            },
+            "W-57": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-58": {
+              "finding": "SUPPLIER_MISMATCH"
+            },
+            "W-59": {
+              "finding": "compliant"
+            },
+            "W-60": {
+              "finding": "compliant"
+            },
+            "W-61": {
+              "finding": "compliant"
+            },
+            "W-62": {
+              "finding": "compliant"
+            },
+            "W-63": {
+              "finding": "VINTAGE_INVALID"
+            },
+            "W-64": {
+              "finding": "compliant"
+            },
+            "W-65": {
+              "finding": "SUPPLIER_MISMATCH"
+            },
+            "W-66": {
+              "finding": "compliant"
+            },
+            "W-67": {
+              "finding": "compliant"
+            },
+            "W-68": {
+              "finding": "compliant"
+            },
+            "W-69": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-70": {
+              "finding": "compliant"
+            },
+            "W-71": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-72": {
+              "finding": "MARGIN_TOO_LOW|VINTAGE_INVALID"
+            },
+            "W-73": {
+              "finding": "compliant"
+            },
+            "W-74": {
+              "finding": "compliant"
+            },
+            "W-75": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-76": {
+              "finding": "compliant"
+            },
+            "W-77": {
+              "finding": "compliant"
+            },
+            "W-78": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-79": {
+              "finding": "VINTAGE_INVALID"
+            },
+            "W-80": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-81": {
+              "finding": "compliant"
+            },
+            "W-82": {
+              "finding": "compliant"
+            },
+            "W-83": {
+              "finding": "compliant"
+            },
+            "W-84": {
+              "finding": "compliant"
+            },
+            "W-85": {
+              "finding": "compliant"
+            },
+            "W-86": {
+              "finding": "compliant"
+            },
+            "W-87": {
+              "finding": "VINTAGE_INVALID"
+            },
+            "W-88": {
+              "finding": "compliant"
+            },
+            "W-89": {
+              "finding": "compliant"
+            },
+            "W-90": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-91": {
+              "finding": "compliant"
+            },
+            "W-92": {
+              "finding": "MARGIN_TOO_LOW|SUPPLIER_MISMATCH"
+            },
+            "W-93": {
+              "finding": "compliant"
+            },
+            "W-94": {
+              "finding": "VINTAGE_INVALID"
+            },
+            "W-95": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-96": {
+              "finding": "compliant"
+            },
+            "W-97": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-98": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-99": {
+              "finding": "VINTAGE_INVALID"
+            },
+            "W-100": {
+              "finding": "compliant"
+            },
+            "W-101": {
+              "finding": "compliant"
+            },
+            "W-102": {
+              "finding": "VINTAGE_INVALID"
+            },
+            "W-103": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-104": {
+              "finding": "compliant"
+            },
+            "W-105": {
+              "finding": "compliant"
+            },
+            "W-106": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-107": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-108": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-109": {
+              "finding": "VINTAGE_INVALID"
+            },
+            "W-110": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-111": {
+              "finding": "compliant"
+            },
+            "W-112": {
+              "finding": "compliant"
+            },
+            "W-113": {
+              "finding": "compliant"
+            },
+            "W-114": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-115": {
+              "finding": "compliant"
+            },
+            "W-116": {
+              "finding": "compliant"
+            },
+            "W-117": {
+              "finding": "VINTAGE_INVALID|SUPPLIER_MISMATCH"
+            },
+            "W-118": {
+              "finding": "compliant"
+            },
+            "W-119": {
+              "finding": "compliant"
+            },
+            "W-120": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-121": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-122": {
+              "finding": "compliant"
+            },
+            "W-133": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-123": {
+              "finding": "compliant"
+            },
+            "W-124": {
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-125": {
+              "finding": "compliant"
+            },
+            "W-126": {
+              "finding": "SUPPLIER_MISMATCH"
+            },
+            "W-127": {
+              "finding": "SUPPLIER_MISMATCH"
+            },
+            "W-128": {
+              "finding": "compliant"
+            },
+            "W-131": {
+              "finding": "SUPPLIER_MISMATCH"
+            },
+            "W-132": {
+              "finding": "SUPPLIER_MISMATCH"
             }
           },
           "row_set": [
@@ -281,7 +545,95 @@
             "W-40",
             "W-41",
             "W-42",
-            "W-43"
+            "W-43",
+            "W-44",
+            "W-45",
+            "W-46",
+            "W-47",
+            "W-48",
+            "W-49",
+            "W-50",
+            "W-51",
+            "W-52",
+            "W-53",
+            "W-54",
+            "W-55",
+            "W-56",
+            "W-57",
+            "W-58",
+            "W-59",
+            "W-60",
+            "W-61",
+            "W-62",
+            "W-63",
+            "W-64",
+            "W-65",
+            "W-66",
+            "W-67",
+            "W-68",
+            "W-69",
+            "W-70",
+            "W-71",
+            "W-72",
+            "W-73",
+            "W-74",
+            "W-75",
+            "W-76",
+            "W-77",
+            "W-78",
+            "W-79",
+            "W-80",
+            "W-81",
+            "W-82",
+            "W-83",
+            "W-84",
+            "W-85",
+            "W-86",
+            "W-87",
+            "W-88",
+            "W-89",
+            "W-90",
+            "W-91",
+            "W-92",
+            "W-93",
+            "W-94",
+            "W-95",
+            "W-96",
+            "W-97",
+            "W-98",
+            "W-99",
+            "W-100",
+            "W-101",
+            "W-102",
+            "W-103",
+            "W-104",
+            "W-105",
+            "W-106",
+            "W-107",
+            "W-108",
+            "W-109",
+            "W-110",
+            "W-111",
+            "W-112",
+            "W-113",
+            "W-114",
+            "W-115",
+            "W-116",
+            "W-117",
+            "W-118",
+            "W-119",
+            "W-120",
+            "W-121",
+            "W-122",
+            "W-133",
+            "W-123",
+            "W-124",
+            "W-125",
+            "W-126",
+            "W-127",
+            "W-128",
+            "W-131",
+            "W-132"
           ],
           "columns": [
             "wine_id",
@@ -343,7 +695,7 @@
       },
       "assertion": {
         "type": "deterministic",
-        "expected": "(?s)(?=.*\\bW\\-03\\b)(?=.*\\bW\\-04\\b)(?=.*\\bW\\-07\\b)(?=.*\\bW\\-10\\b)(?=.*\\bW\\-13\\b)(?=.*\\bW\\-14\\b)(?=.*\\bW\\-15\\b)(?=.*\\bW\\-16\\b)(?=.*\\bW\\-19\\b)(?=.*\\bW\\-20\\b)(?=.*\\bW\\-21\\b)(?=.*\\bW\\-22\\b)(?=.*\\bW\\-23\\b)(?=.*\\bW\\-25\\b)(?=.*\\bW\\-28\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-32\\b)(?=.*\\bW\\-35\\b)(?=.*\\bW\\-36\\b)(?=.*\\bW\\-38\\b)(?=.*\\bW\\-40\\b)(?=.*\\bW\\-41\\b)(?=.*\\bW\\-42\\b)(?=.*\\bW\\-43\\b)",
+        "expected": "(?s)(?=.*\\bW\\-03\\b)(?=.*\\bW\\-04\\b)(?=.*\\bW\\-07\\b)(?=.*\\bW\\-10\\b)(?=.*\\bW\\-13\\b)(?=.*\\bW\\-14\\b)(?=.*\\bW\\-15\\b)(?=.*\\bW\\-16\\b)(?=.*\\bW\\-19\\b)(?=.*\\bW\\-20\\b)(?=.*\\bW\\-21\\b)(?=.*\\bW\\-22\\b)(?=.*\\bW\\-23\\b)(?=.*\\bW\\-25\\b)(?=.*\\bW\\-28\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-32\\b)(?=.*\\bW\\-35\\b)(?=.*\\bW\\-36\\b)(?=.*\\bW\\-38\\b)(?=.*\\bW\\-40\\b)(?=.*\\bW\\-41\\b)(?=.*\\bW\\-42\\b)(?=.*\\bW\\-43\\b)(?=.*\\bW\\-45\\b)(?=.*\\bW\\-46\\b)(?=.*\\bW\\-51\\b)(?=.*\\bW\\-54\\b)(?=.*\\bW\\-57\\b)(?=.*\\bW\\-58\\b)(?=.*\\bW\\-63\\b)(?=.*\\bW\\-65\\b)(?=.*\\bW\\-69\\b)(?=.*\\bW\\-71\\b)(?=.*\\bW\\-72\\b)(?=.*\\bW\\-75\\b)(?=.*\\bW\\-78\\b)(?=.*\\bW\\-79\\b)(?=.*\\bW\\-80\\b)(?=.*\\bW\\-87\\b)(?=.*\\bW\\-90\\b)(?=.*\\bW\\-92\\b)(?=.*\\bW\\-94\\b)(?=.*\\bW\\-95\\b)(?=.*\\bW\\-97\\b)(?=.*\\bW\\-98\\b)(?=.*\\bW\\-99\\b)(?=.*\\bW\\-102\\b)(?=.*\\bW\\-103\\b)(?=.*\\bW\\-106\\b)(?=.*\\bW\\-107\\b)(?=.*\\bW\\-108\\b)(?=.*\\bW\\-109\\b)(?=.*\\bW\\-110\\b)(?=.*\\bW\\-114\\b)(?=.*\\bW\\-117\\b)(?=.*\\bW\\-120\\b)(?=.*\\bW\\-121\\b)(?=.*\\bW\\-133\\b)(?=.*\\bW\\-124\\b)(?=.*\\bW\\-126\\b)(?=.*\\bW\\-127\\b)(?=.*\\bW\\-131\\b)(?=.*\\bW\\-132\\b)",
         "deterministic": {
           "path": "$.text",
           "comparison": "regex_match"
@@ -452,27 +804,27 @@
         "expected": {
           "keys": {
             "wine_count": {
-              "value": 43,
+              "value": 131,
               "tolerance": null
             },
             "margin_too_low_count": {
-              "value": 15,
+              "value": 41,
               "tolerance": null
             },
             "vintage_invalid_count": {
-              "value": 6,
+              "value": 15,
               "tolerance": null
             },
             "supplier_mismatch_count": {
-              "value": 6,
+              "value": 14,
               "tolerance": null
             },
             "compliant_count": {
-              "value": 19,
+              "value": 67,
               "tolerance": null
             },
             "margin_shortfall_total": {
-              "value": 16.14,
+              "value": 27.79,
               "tolerance": 0.01
             }
           },

@@ -1,25 +1,24 @@
 #!/usr/bin/env python3
 """compute_gold.py — derive the gold deliverables for this task from environment/input/.
 
-Single source of truth for the answer. Run it after ANY change to the inputs or the
-policy; it rewrites
+Single source of truth for the answer (the rules live in policy_engine.py). Run it after ANY
+change to the inputs or the policy; it rewrites
   solution/files/wine_findings.csv
   solution/files/wine_memo.md
   solution/files/results.json
   solution/golden_trajectory.json      (heredoc replay of the gold files)
   tests/verifier.json + tests/manifest.json   (expected rows / row_set / results keys only)
-and prints the derivation per wine so the answer can be checked by hand.
-
-Rules implemented are margin_policy.md S0, WM1–WM3 and the derived-figure clause verbatim.
-Nothing here is heuristic. Stdlib only: the task image carries no pandas.
+and prints the derivation per wine so the answer can be checked by hand. Stdlib only.
 """
 from __future__ import annotations
 
-import csv
 import json
 import re
-from decimal import ROUND_HALF_UP, Decimal
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from policy_engine import evaluate, results_of  # noqa: E402
 
 TASK = Path(__file__).resolve().parents[1]
 INPUT = TASK / "environment" / "input"
@@ -29,187 +28,43 @@ FILES = TASK / "solution" / "files"
 SPEC_PATH = TASK / "tests" / "verifier.json"
 MIRROR_PATH = TASK / "tests" / "manifest.json"
 
-# ---- policy constants (margin_policy.md) -----------------------------------------
-REVIEW_YEAR = 2025
-VINTAGE_MIN = 2000
-MIN_MARGIN = {"still": Decimal("20"), "sparkling": Decimal("25"), "fortified": Decimal("18")}  # WM1 table
-CODES = ["MARGIN_TOO_LOW", "VINTAGE_INVALID", "SUPPLIER_MISMATCH"]  # join order WM1, WM2, WM3
-COUNT_KEYS = {"MARGIN_TOO_LOW": "margin_too_low_count",
-              "VINTAGE_INVALID": "vintage_invalid_count",
-              "SUPPLIER_MISMATCH": "supplier_mismatch_count"}
-CENT = Decimal("0.01")
-
-# ---- purchasing_notes.md, mirrored here (the notes are prose; keep both in step) --------
-# A note applies to lines with po_date on or after its date and prevails over manifest/terms.
-NOTE_FREIGHT = {  # supplier -> (from_date, freight, basis, case_size)
-    "reims cellars": ("2025-02-02", Decimal("15.60"), "per case", Decimal(6)),
-    "tuscan vines": ("2025-06-01", Decimal("21.60"), "per case", Decimal(6)),
-}
-NOTE_ALLOCATION_OPEN = {"w-17": "2025-03-15"}                      # wine -> from_date
-NOTE_SUPPLIER_ALIAS = {"rioja direct sl": ("2025-04-20", "rioja direct")}  # invoiced -> (from, same as)
-NOTE_ALTERNATE_WITHDRAWN = {"left bank brokers": "2025-07-08"}    # alternate -> from_date
-
-
-def norm(value: str | None) -> str:
-    """S0: trim surrounding whitespace, ignore letter case. Nothing else."""
-    return (value or "").strip().casefold()
-
-
-def rows(name: str) -> list[dict[str, str]]:
-    with (INPUT / name).open(newline="", encoding="utf-8-sig") as fh:
-        return list(csv.DictReader(fh))
-
-
-def cents(x: Decimal) -> Decimal:
-    return x.quantize(CENT, rounding=ROUND_HALF_UP)
-
 
 def main() -> int:
-    # S0: the manifest entry with the latest effective_from on or before 31 Dec of the review year governs
-    manifest: dict[str, dict[str, str]] = {}
-    for r in rows("wine_manifest.csv"):
-        if r["effective_from"].strip() > f"{REVIEW_YEAR}-12-31":
-            continue
-        key = norm(r["wine_id"])
-        if key not in manifest or r["effective_from"].strip() > manifest[key]["effective_from"].strip():
-            manifest[key] = r
-    # S0/WM1: freight per bottle on the basis the terms state
-    freight: dict[str, Decimal] = {}
-    for r in rows("supplier_terms.csv"):
-        basis = norm(r["freight_basis"])
-        per_bottle = Decimal(r["freight"]) / (Decimal(r["case_size"]) if basis == "per case" else 1)
-        assert basis in ("per bottle", "per case"), r
-        freight[norm(r["supplier"])] = per_bottle
-
-    # S0: one wine per wine_id; the active line governs; superseded/void lines are not read;
-    # a repeated line is the same line. Output ids are written as the purchases file writes them.
-    governing: dict[str, dict[str, str]] = {}
-    order: list[str] = []
-    for r in rows("wine_purchases.csv"):
-        key = norm(r["wine_id"])
-        if key not in order:
-            order.append(key)
-        if norm(r["po_status"]) == "active":
-            assert key not in governing or governing[key] == r, f"two distinct active lines for {r['wine_id']}"
-            governing[key] = r
-    assert set(order) == set(governing), f"wines with no active line: {set(order) - set(governing)}"
-
-    out, counts = [], {k: 0 for k in COUNT_KEYS.values()}
-    memo_rows, trap_rows = [], []
-    shortfall_total = Decimal("0")
-    for key in order:
-        r = governing[key]
-        wid = r["wine_id"].strip()
-        m = manifest.get(key)
-        bottles = Decimal(re.fullmatch(r"(\d+)x\d+cl", r["pack"].strip()).group(1))  # S0: prices are per pack
-        purchase, selling = Decimal(r["purchase_price"]) / bottles, Decimal(r["selling_price"]) / bottles
-        supplier = norm(r["supplier"])
-        futures = norm(r["wine_type"]) == "futures"
-        category = norm(m["category"]) if m else ""
-        allocation = norm(m["allocation"]) if m else ""
-        po_date = r["po_date"].strip()
-
-        # S0 — buyer's notes prevail for lines dated on or after the note
-        per_bottle = freight[supplier]
-        if supplier in NOTE_FREIGHT and po_date >= NOTE_FREIGHT[supplier][0]:
-            _, amt, basis, case = NOTE_FREIGHT[supplier][0:1] + NOTE_FREIGHT[supplier][1:]
-            per_bottle = amt / case if basis == "per case" else amt
-        if key in NOTE_ALLOCATION_OPEN and po_date >= NOTE_ALLOCATION_OPEN[key]:
-            allocation = "open"
-        supplier_for_match = supplier
-        if supplier in NOTE_SUPPLIER_ALIAS and po_date >= NOTE_SUPPLIER_ALIAS[supplier][0]:
-            supplier_for_match = NOTE_SUPPLIER_ALIAS[supplier][1]
-
-        # WM1 — landed cost on the invoiced supplier's freight; category minimum; open-futures exempt
-        landed = purchase + per_bottle
-        margin = (selling - landed) / landed * 100
-        minimum = MIN_MARGIN[category] if category else None
-        exempt = futures and allocation == "open"
-        low = minimum is not None and margin < minimum
-
-        # WM2 — 2000..review year for stock, +1 for futures; NV only where nv_allowed = Y
-        vintage_text = r["vintage"].strip()
-        if vintage_text.upper() == "NV":
-            vintage_ok = bool(m) and norm(m["nv_allowed"]) == "y"
-        elif re.fullmatch(r"\d{4}", vintage_text):
-            vintage_ok = VINTAGE_MIN <= int(vintage_text) <= REVIEW_YEAR + (1 if futures else 0)
-        else:
-            vintage_ok = False
-
-        # WM3 — expected supplier; alternate acceptable on futures only; no manifest entry = mismatch
-        if m is None:
-            supplier_ok = False
-        else:
-            acceptable = {norm(m["expected_supplier"])}
-            alt = norm(m["alternate_supplier"])
-            if futures and alt and not (alt in NOTE_ALTERNATE_WITHDRAWN and po_date >= NOTE_ALTERNATE_WITHDRAWN[alt]):
-                acceptable.add(alt)
-            supplier_ok = supplier_for_match in acceptable
-
-        findings = []
-        if low and not exempt:
-            findings.append("MARGIN_TOO_LOW")
-        if not vintage_ok:
-            findings.append("VINTAGE_INVALID")
-        if not supplier_ok:
-            findings.append("SUPPLIER_MISMATCH")
-        finding = "|".join(findings) if findings else "compliant"
-        for code in findings:
-            counts[COUNT_KEYS[code]] += 1
-        out.append({"wine_id": wid, "finding": finding})
-
-        shortfall = Decimal("0")
-        reasons = []
-        if "MARGIN_TOO_LOW" in findings:
-            shortfall = cents(landed * (1 + minimum / 100) - selling)
-            shortfall_total += shortfall
-            reasons.append(f"{margin:.2f} pct on a landed cost of {landed:.2f} (po {po_date}) ({category} minimum {minimum} pct), "
-                           f"shortfall {shortfall:.2f}")
-        if "VINTAGE_INVALID" in findings:
-            limit = REVIEW_YEAR + (1 if futures else 0)
-            reasons.append(f"vintage {vintage_text} outside {VINTAGE_MIN}-{limit}" if vintage_text.upper() != "NV"
-                           else "NV where the manifest does not allow non-vintage")
-        if "SUPPLIER_MISMATCH" in findings:
-            reasons.append(f"supplier {r['supplier'].strip()} where the manifest "
-                           + (f"expects {m['expected_supplier']}" if m else "has no entry for this wine"))
-        if findings:
-            memo_rows.append((wid, finding, "; ".join(reasons)))
-        if low and exempt:
-            trap_rows.append((wid, r["wine_name"], margin, minimum))
-        print(f"{wid}: {r['wine_name'][:22]:22s} {category:9s} landed={landed:6.2f} margin={margin:7.2f}% "
-              f"min={minimum} type={'futures' if futures else 'stock':7s} alloc={allocation or '-':6s} "
-              f"vint={vintage_text:4s} sup={r['supplier'].strip()} -> {finding}")
-
-    trap_ids = [t[0] for t in trap_rows]
-    wine_count = len(out)
-    compliant = sum(1 for r in out if r["finding"] == "compliant")
-    results = {"wine_count": wine_count, **counts, "compliant_count": compliant,
-               "margin_shortfall_total": float(shortfall_total)}
+    wines = evaluate(INPUT)
+    results = results_of(wines)
+    for w in wines:
+        print(f"{w.wine_id}: {w.name[:24]:24s} {w.category:9s} po={w.po_date} landed={w.landed:6.2f} "
+              f"margin={w.margin:7.2f}% min={w.minimum} {'futures' if w.futures else 'stock':7s} "
+              f"{'exempt' if w.exempt else '':6s} vint={w.vintage:4s} sup={w.supplier}/{w.expected or '-'} -> {w.finding}")
+    trap_ids = [w.wine_id for w in wines if w.low and w.exempt]
+    flagged = [w.wine_id for w in wines if w.findings]
     print(f"\n{results}\nexempt low-margin wines: {trap_ids}")
 
-    # ---- write gold files ------------------------------------------------------------
+    # ---- gold files ----------------------------------------------------------------------
     FILES.mkdir(parents=True, exist_ok=True)
     header = ["wine_id", "finding"]
-    csv_text = ",".join(header) + "\n" + "".join(",".join(r[h] for h in header) + "\n" for r in out)
+    csv_text = "wine_id,finding\n" + "".join(f"{w.wine_id},{w.finding}\n" for w in wines)
     (FILES / "wine_findings.csv").write_text(csv_text, encoding="utf-8")
     json_text = json.dumps(results, indent=2) + "\n"
     (FILES / "results.json").write_text(json_text, encoding="utf-8")
 
+    n, c = results["wine_count"], results["compliant_count"]
     memo = ["# Wine purchasing and margin audit — review year 2025", "",
-            f"{wine_count} wines reviewed against WM-STD-1 (one per wine_id; only the active purchasing line "
-            f"read). {wine_count - compliant} carry a finding and {compliant} are compliant. Margin shortfall "
-            f"total {shortfall_total:.2f}.", "",
-            "| Wine | Finding | Why |", "|---|---|---|"]
-    memo += [f"| `{w}` | {c} | {why} |" for w, c, why in memo_rows]
+            f"{n} wines reviewed against WM-STD-1 (one per wine_id on its governing active line; wines with no "
+            f"active line are outside the review). {n - c} carry a finding and {c} are compliant. Margin shortfall "
+            f"total {results['margin_shortfall_total']:.2f}.", "",
+            "## Findings", ""]
+    memo += [f"- `{w.wine_id}` ({w.name}) — {w.finding}: {'; '.join(w.reasons)}" for w in wines if w.findings]
     memo += ["", "## Wines a plain margin check would flag that the policy does not", ""]
-    for wid, name, margin, minimum in trap_rows:
-        memo.append(f"- `{wid}` ({name}): {margin:.1f} pct against a {minimum} pct minimum, but it is a futures "
-                    f"(pre-arrival) wine with an open allocation, which WM1 exempts from the margin minimum. "
-                    f"The exemption covers WM1 only.")
+    for w in wines:
+        if w.low and w.exempt:
+            memo.append(f"- `{w.wine_id}` ({w.name}): {w.margin:.1f} pct against a {w.minimum} pct minimum, but it is a "
+                        f"futures (pre-arrival) wine with an open allocation on its line date ({w.po_date}), which WM1 "
+                        f"exempts from the margin minimum. The exemption covers WM1 only.")
     memo_text = "\n".join(memo) + "\n"
     (FILES / "wine_memo.md").write_text(memo_text, encoding="utf-8")
 
-    # ---- golden trajectory (heredoc replay) ------------------------------------------
+    # ---- golden trajectory (heredoc replay) ----------------------------------------------
     reads = ["margin_policy.md", "wine_purchases.csv", "wine_manifest.csv", "supplier_terms.csv",
              "purchasing_notes.md", "submission_format.md"]
     steps = [{"name": "bash", "server": "local", "arguments": {"command": f"cat input/{f}"}} for f in reads]
@@ -222,11 +77,10 @@ def main() -> int:
                   "arguments": {"command": "ls -la wine_findings.csv wine_memo.md results.json"}})
     (TASK / "solution" / "golden_trajectory.json").write_text(json.dumps(steps, indent=2) + "\n", encoding="utf-8")
 
-    # ---- verifier expected values ----------------------------------------------------
+    # ---- verifier expected values --------------------------------------------------------
     spec = json.loads(SPEC_PATH.read_text(encoding="utf-8"))
-    by_id = {r["wine_id"]: {"finding": r["finding"]} for r in out}
-    all_ids = [r["wine_id"] for r in out]
-    flagged = [w for w, _, _ in memo_rows]
+    by_id = {w.wine_id: {"finding": w.finding} for w in wines}
+    all_ids = [w.wine_id for w in wines]
     for v in spec["verifiers"]:
         exp = v["assertion"].get("expected")
         if v["name"] == "findings_table_trap":
