@@ -177,14 +177,14 @@ several rows, and the model can no longer verify by inspection.
 
 | Element | Count / shape |
 |---|---|
-| purchasing lines / reviewed wines | 157 / 130 (W-129, W-130 have no active line → outside the review) |
+| purchasing lines / reviewed wines | 157 / 131 (W-129, W-130 have no active line → outside the review) |
 | manifest rows | 138 incl. 5 stale-duplicate wines (both orders) and 2 future-dated rows; W-16, W-131, W-132 absent |
 | suppliers | 18, four quoted per case; two trading-name aliases |
 | dated notes | 9: two freight-basis changes on Tuscan Vines that open and close a window (1 Jun–31 Aug), a Douro rate rise, two allocation changes (open W-17, close W-120), one alternate withdrawn, two aliases with "earlier invoices stand", one no-op (Reims) |
 | line shapes | repeated lines, superseded/void lines before and after, two different active lines per wine with the other line priced on the wrong side of the minimum (listed before or after), inactive lines dated after the active one across a note date (W-122, W-133), lines dated exactly on note dates (W-121, W-127, W-128) |
 | packs | 1x, 3x, 6x, 12x75cl |
 
-Answer r4: 130 wines, shortfall total 26.81 (see `solution/files/results.json`). Exempt
+Answer r4: 131 wines, 41 MARGIN_TOO_LOW, 15 VINTAGE_INVALID, 14 SUPPLIER_MISMATCH, 67 compliant, shortfall total 27.79 (see `solution/files/results.json`). Exempt
 low-margin wines: W-02, W-17, W-29, W-30.
 
 Engine: `solution/policy_engine.py` now holds the rules once; `compute_gold.py` uses it for the
