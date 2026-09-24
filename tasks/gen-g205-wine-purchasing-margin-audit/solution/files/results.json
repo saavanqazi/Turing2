@@ -1,8 +1,8 @@
 {
   "wine_count": 131,
-  "margin_too_low_count": 41,
+  "margin_too_low_count": 39,
   "vintage_invalid_count": 15,
-  "supplier_mismatch_count": 14,
-  "compliant_count": 67,
-  "margin_shortfall_total": 27.79
+  "supplier_mismatch_count": 13,
+  "compliant_count": 70,
+  "margin_shortfall_total": 28.84
 }

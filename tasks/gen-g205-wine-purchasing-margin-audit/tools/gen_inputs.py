@@ -81,8 +81,10 @@ def date_in(lo="2025-01-06", hi="2025-11-28") -> str:
 
 def main() -> int:
     # keep the 43 hand-designed wines verbatim
-    base_p = [r for r in csv.DictReader((INPUT / "wine_purchases.csv").open(newline="", encoding="utf-8"))
-              if int(r["wine_id"].split("-")[1]) <= 43]
+    base_p = []
+    for r in csv.DictReader((INPUT / "wine_purchases.csv").open(newline="", encoding="utf-8")):
+        if int(r["wine_id"].split("-")[1]) <= 43 and r.get("po_status", "active") == "active":
+            base_p.append({k: v for k, v in r.items() if k != "po_status"})
     base_m = [r for r in csv.DictReader((INPUT / "wine_manifest.csv").open(newline="", encoding="utf-8"))
               if int(r["wine_id"].split("-")[1]) <= 43]
     purchases, manifest = list(base_p), list(base_m)
@@ -99,10 +101,12 @@ def main() -> int:
         manifest.append({"wine_id": wid, "effective_from": eff, "category": cat, "expected_supplier": exp,
                          "alternate_supplier": alt, "allocation": alloc, "nv_allowed": nv})
 
-    def add_line(wid, name, pack, purchase, selling, vintage, supplier, wtype, po_date, status):
+    def add_line(wid, name, pack, purchase, selling, vintage, supplier, wtype, po_date, status="active"):
+        if status != "active":
+            return  # r5: no status column; superseded/void lines no longer exist
         purchases.append({"wine_id": wid, "wine_name": name, "pack": pack, "purchase_price": purchase,
                           "selling_price": selling, "vintage": vintage, "supplier": supplier, "wine_type": wtype,
-                          "po_date": po_date, "po_status": status})
+                          "po_date": po_date})
 
     def price_pair(landed_target_margin_pct: Decimal, freight: Decimal, base_purchase: Decimal):
         """purchase, selling per bottle such that the landed margin is exactly the target."""
@@ -148,25 +152,9 @@ def main() -> int:
         else:
             vintage = rng.choice(["NV", "NV", "2019", "2020", "2022", "2016"])
         wtype = rng.choice(["futures", "Futures", "FUTURES"]) if futures else rng.choice(["stock", "stock", "stock", "Stock"])
-        status_shape = rng.random()
-        add_line(wid, name, pack, purchase_s, selling_s, vintage, supplier, wtype, po_date, "active")
-        if status_shape < 0.12:   # a superseded line with a different (worse or better) price, listed after
-            add_line(wid, name, pack, purchase_s, money((selling + Decimal(rng.choice([-3, 3, -1.5]))) * pack_n),
-                     vintage, supplier, wtype, date_in("2025-01-05", po_date), "superseded")
-        elif status_shape < 0.20:  # a void line listed before the active one
-            purchases.insert(len(purchases) - 1, {**purchases[-1], "selling_price": money((selling - Decimal(2)) * pack_n),
-                                                  "po_date": date_in("2025-01-05", po_date), "po_status": "void"})
-        elif status_shape < 0.24:  # the same line repeated verbatim
-            add_line(wid, name, pack, purchase_s, selling_s, vintage, supplier, wtype, po_date, "active")
-        elif status_shape < 0.28:  # two different active lines: the latest po_date governs; the other is
-            # priced on the wrong side of the minimum and listed before or after the governing line
-            earlier = date_in("2025-01-05", po_date)
-            other_sel = (landed_of(purchase, freight) * (1 + (MIN[cat] + Decimal(rng.choice([-6, 9]))) / 100)).quantize(Decimal("0.01"))
-            other = {**purchases[-1], "selling_price": money(other_sel * pack_n), "po_date": earlier, "po_status": "active"}
-            if rng.random() < 0.5:
-                purchases.insert(len(purchases) - 1, other)
-            else:
-                purchases.append(other)
+        add_line(wid, name, pack, purchase_s, selling_s, vintage, supplier, wtype, po_date)
+        if rng.random() < 0.05:   # the export repeats the line verbatim, usually adjacent
+            add_line(wid, name, pack, purchase_s, selling_s, vintage, supplier, wtype, po_date)
         wid_n += 1
 
     # ---- designed note-sensitive and scope wines -----------------------------------------
@@ -180,8 +168,7 @@ def main() -> int:
     add_line("W-122", "Crusted Port", "1x75cl", "23.25", "29.50", "NV", "Douro Trading", "stock", "2025-05-11", "active")  # day before
     add_line("W-122", "Crusted Port", "1x75cl", "23.25", "29.50", "NV", "Douro Trading", "stock", "2025-06-02", "superseded")  # later, not read
     add_manifest("W-133", "still", "Tuscan Vines")
-    add_line("W-133", "Bolgheri Rosso", "1x75cl", "12.00", "16.60", "2022", "Tuscan Vines", "stock", "2025-08-20", "active")  # 6-case window: low
-    add_line("W-133", "Bolgheri Rosso", "1x75cl", "12.00", "16.60", "2022", "Tuscan Vines", "stock", "2025-09-05", "void")  # later void: not read
+    add_line("W-133", "Bolgheri Rosso", "1x75cl", "12.00", "16.60", "2022", "Tuscan Vines", "stock", "2025-08-20")  # 6-case window: low
     add_manifest("W-123", "still", "Tuscan Vines")
     add_line("W-123", "Morellino di Scansano", "1x75cl", "12.00", "16.60", "2022", "Tuscan Vines", "stock", "2025-09-01", "active")  # 12-case again
     add_manifest("W-124", "still", "Tuscan Vines")
@@ -195,11 +182,6 @@ def main() -> int:
     add_manifest("W-128", "still", "Rioja Direct")
     add_line("W-128", "Rioja Gran Reserva", "1x75cl", "26.00", "33.00", "2015", "Rioja Direct SL", "stock", "2025-04-20", "active")  # alias on date
     # wines with no active line at all: outside the review
-    add_manifest("W-129", "still", "Mosel Handel")
-    add_line("W-129", "Spatlese Reserve", "1x75cl", "15.00", "17.00", "2021", "Mosel Handel", "stock", "2025-03-02", "superseded")
-    add_line("W-129", "Spatlese Reserve", "1x75cl", "15.00", "17.50", "2021", "Mosel Handel", "stock", "2025-04-09", "void")
-    add_manifest("W-130", "sparkling", "Reims Cellars", "", "", "Y")
-    add_line("W-130", "Champagne Demi-Sec", "1x75cl", "30.00", "36.00", "NV", "Reims Cellars", "stock", "2025-02-20", "void")
     # missing from the manifest entirely
     add_line("W-131", "Zibibbo", "1x75cl", "9.00", "13.00", "2023", "Tuscan Vines", "stock", "2025-05-05", "active")
     add_line("W-132", "Kerner", "1x75cl", "10.00", "13.90", "2022", "Wachau Kellerei", "stock", "2025-06-15", "active")
@@ -221,7 +203,11 @@ def main() -> int:
         manifest.insert(idx + 1, {**manifest[idx], "expected_supplier": "Finger Lakes Co", "effective_from": "2026-02-01"})
 
     # ---- write ---------------------------------------------------------------------------
-    ph = ["wine_id", "wine_name", "pack", "purchase_price", "selling_price", "vintage", "supplier", "wine_type", "po_date", "po_status"]
+    ph = ["wine_id", "wine_name", "pack", "purchase_price", "selling_price", "vintage", "supplier", "wine_type", "po_date"]
+    # two of the repeated lines sit apart from their twin, as a re-exported batch would
+    dup_idx = [i for i in range(1, len(purchases)) if purchases[i] == purchases[i - 1]]
+    for i in dup_idx[:2]:
+        purchases.append(purchases.pop(i))
     with (INPUT / "wine_purchases.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n"); w.writerow(ph); [w.writerow([r[h] for h in ph]) for r in purchases]
     mh = ["wine_id", "effective_from", "category", "expected_supplier", "alternate_supplier", "allocation", "nv_allowed"]

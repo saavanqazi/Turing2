@@ -1,6 +1,6 @@
 # Wine purchasing and margin audit — review year 2025
 
-131 wines reviewed against WM-STD-1 (one per wine_id on its governing active line; wines with no active line are outside the review). 64 carry a finding and 67 are compliant. Margin shortfall total 27.79.
+131 wines reviewed against WM-STD-1 (one per wine_id on its governing active line; wines with no active line are outside the review). 61 carry a finding and 70 are compliant. Margin shortfall total 28.84.
 
 ## Findings
 
@@ -30,36 +30,33 @@
 - `W-43` (Saint-Julien) — SUPPLIER_MISMATCH: supplier Left Bank Brokers where the manifest expects Bordeaux Negoce
 - `W-45` (Marsala Superiore Hillside) — MARGIN_TOO_LOW: 17.95 pct on a landed cost of 25.90 per bottle against the fortified minimum of 18 pct (line dated 2025-03-29); shortfall 0.01
 - `W-46` (Torrontes Estate) — MARGIN_TOO_LOW: 18.80 pct on a landed cost of 20.90 per bottle against the still minimum of 20 pct (line dated 2025-06-25); shortfall 0.25
-- `W-51` (Amontillado Old Vines) — MARGIN_TOO_LOW: 17.21 pct on a landed cost of 47.30 per bottle against the fortified minimum of 18 pct (line dated 2025-05-31); shortfall 0.37
+- `W-47` (Chenin Blanc Reserve Single Vineyard) — VINTAGE_INVALID: vintage 2026 outside 2000-2025
+- `W-48` (Marsala Superiore Single Vineyard) — MARGIN_TOO_LOW: 16.78 pct on a landed cost of 17.40 per bottle against the fortified minimum of 18 pct (line dated 2025-02-14); shortfall 0.21
+- `W-50` (Tannat Estate) — MARGIN_TOO_LOW|VINTAGE_INVALID: 14.86 pct on a landed cost of 23.55 per bottle against the still minimum of 20 pct (line dated 2025-07-07); shortfall 1.21; vintage 2026 outside 2000-2025
+- `W-51` (Corvina Village) — MARGIN_TOO_LOW: 19.45 pct on a landed cost of 9.10 per bottle against the still minimum of 20 pct (line dated 2025-03-25); shortfall 0.05
 - `W-54` (Mourvedre Village) — MARGIN_TOO_LOW: 17.49 pct on a landed cost of 29.50 per bottle against the still minimum of 20 pct (line dated 2025-04-21); shortfall 0.74
 - `W-57` (Nero d'Avola Village) — MARGIN_TOO_LOW: 19.97 pct on a landed cost of 29.50 per bottle against the still minimum of 20 pct (line dated 2025-11-03); shortfall 0.01
 - `W-58` (Zweigelt Single Vineyard) — SUPPLIER_MISMATCH: supplier Willamette Partners where the manifest expects Cape Winelands Ltd
+- `W-59` (Sangiovese Selection) — MARGIN_TOO_LOW: 17.52 pct on a landed cost of 10.90 per bottle against the still minimum of 20 pct (line dated 2025-03-29); shortfall 0.27
 - `W-63` (Petit Verdot Estate) — VINTAGE_INVALID: vintage 2026 outside 2000-2025
 - `W-65` (Melon de Bourgogne Selection) — SUPPLIER_MISMATCH: supplier Cape Winelands Ltd where the manifest expects Barossa Exports
-- `W-69` (Palo Cortado Classic) — MARGIN_TOO_LOW: 15.52 pct on a landed cost of 20.30 per bottle against the fortified minimum of 18 pct (line dated 2025-07-16); shortfall 0.50
+- `W-68` (Prosecco Rose Old Vines) — MARGIN_TOO_LOW: 24.98 pct on a landed cost of 11.85 per bottle against the sparkling minimum of 25 pct (line dated 2025-08-25); shortfall 0.00
 - `W-71` (Corvina Hillside) — MARGIN_TOO_LOW: 17.49 pct on a landed cost of 33.90 per bottle against the still minimum of 20 pct (line dated 2025-08-20); shortfall 0.85
 - `W-72` (Assyrtiko Estate) — MARGIN_TOO_LOW|VINTAGE_INVALID: 16.42 pct on a landed cost of 10.60 per bottle against the still minimum of 20 pct (line dated 2025-05-28); shortfall 0.38; vintage 2027 outside 2000-2025
 - `W-75` (Aglianico Classic) — MARGIN_TOO_LOW: 17.47 pct on a landed cost of 12.65 per bottle against the still minimum of 20 pct (line dated 2025-07-01); shortfall 0.32
-- `W-78` (Melon de Bourgogne Reserve) — MARGIN_TOO_LOW: 19.40 pct on a landed cost of 34.75 per bottle against the still minimum of 20 pct (line dated 2025-10-13); shortfall 0.21
-- `W-79` (Carignan Hillside) — VINTAGE_INVALID: vintage 2026 outside 2000-2025
-- `W-80` (Champagne Rose Single Vineyard) — MARGIN_TOO_LOW: 23.78 pct on a landed cost of 9.80 per bottle against the sparkling minimum of 25 pct (line dated 2025-04-29); shortfall 0.12
-- `W-87` (Late Bottled Vintage Port Reserve) — VINTAGE_INVALID: NV where the manifest does not allow non-vintage
-- `W-90` (Lambrusco Secco Reserve) — MARGIN_TOO_LOW: 23.79 pct on a landed cost of 25.30 per bottle against the sparkling minimum of 25 pct (line dated 2025-11-10); shortfall 0.31
-- `W-92` (Nero d'Avola Old Vines) — MARGIN_TOO_LOW|SUPPLIER_MISMATCH: 19.97 pct on a landed cost of 33.65 per bottle against the still minimum of 20 pct (line dated 2025-05-06); shortfall 0.01; supplier Rioja Direct where the manifest expects Loire Direct
-- `W-94` (Barbera d'Asti Classic) — VINTAGE_INVALID: vintage 1999 outside 2000-2025
-- `W-95` (Vermentino di Gallura Cru) — MARGIN_TOO_LOW: 19.93 pct on a landed cost of 14.65 per bottle against the still minimum of 20 pct (line dated 2025-04-20); shortfall 0.01
-- `W-97` (Semillon Classic) — MARGIN_TOO_LOW: 19.38 pct on a landed cost of 14.60 per bottle against the still minimum of 20 pct (line dated 2025-04-30); shortfall 0.09
-- `W-98` (Cap Classique Selection) — MARGIN_TOO_LOW: 24.39 pct on a landed cost of 34.15 per bottle against the sparkling minimum of 25 pct (line dated 2025-07-10); shortfall 0.21
-- `W-99` (Vernaccia Estate) — VINTAGE_INVALID: vintage 2026 outside 2000-2025
-- `W-102` (Champagne Rose Classic) — VINTAGE_INVALID: NV where the manifest does not allow non-vintage
-- `W-103` (Torrontes Village) — MARGIN_TOO_LOW: 18.79 pct on a landed cost of 12.35 per bottle against the still minimum of 20 pct (line dated 2025-09-14); shortfall 0.15
-- `W-106` (Bual Madeira Classic) — MARGIN_TOO_LOW: 14.17 pct on a landed cost of 26.05 per bottle against the fortified minimum of 18 pct (line dated 2025-07-07); shortfall 1.00
-- `W-107` (Semillon Old Vines) — MARGIN_TOO_LOW: 19.40 pct on a landed cost of 10.00 per bottle against the still minimum of 20 pct (line dated 2025-06-20); shortfall 0.06
-- `W-108` (Cava Gran Reserva Coastal) — MARGIN_TOO_LOW: 23.80 pct on a landed cost of 62.60 per bottle against the sparkling minimum of 25 pct (line dated 2025-05-18); shortfall 0.75
-- `W-109` (Sauvignon Blanc Cru) — VINTAGE_INVALID: vintage 1999 outside 2000-2025
-- `W-110` (Montepulciano Coastal) — MARGIN_TOO_LOW: 17.52 pct on a landed cost of 12.90 per bottle against the still minimum of 20 pct (line dated 2025-09-21); shortfall 0.32
-- `W-114` (Cabernet Sauvignon Single Vineyard) — MARGIN_TOO_LOW: 19.41 pct on a landed cost of 39.15 per bottle against the still minimum of 20 pct (line dated 2025-08-20); shortfall 0.23
-- `W-117` (Sangiovese Village) — VINTAGE_INVALID|SUPPLIER_MISMATCH: vintage 1999 outside 2000-2025; supplier Wachau Kellerei where the manifest expects Loire Direct
+- `W-82` (Vernaccia Estate) — MARGIN_TOO_LOW: 18.81 pct on a landed cost of 15.10 per bottle against the still minimum of 20 pct (line dated 2025-04-21); shortfall 0.18
+- `W-88` (Cabernet Franc Classic) — MARGIN_TOO_LOW: 18.79 pct on a landed cost of 38.90 per bottle against the still minimum of 20 pct (line dated 2025-05-30); shortfall 0.47
+- `W-93` (White Port Selection) — MARGIN_TOO_LOW: 17.41 pct on a landed cost of 33.65 per bottle against the fortified minimum of 18 pct (line dated 2025-09-10); shortfall 0.20
+- `W-95` (Champagne Rose Single Vineyard) — MARGIN_TOO_LOW: 24.96 pct on a landed cost of 17.55 per bottle against the sparkling minimum of 25 pct (line dated 2025-07-11); shortfall 0.01
+- `W-99` (Blaufrankisch Classic) — SUPPLIER_MISMATCH: supplier Reims Cellars where the manifest expects Tuscan Vines
+- `W-100` (Nerello Mascalese Hillside) — VINTAGE_INVALID: vintage 2026 outside 2000-2025
+- `W-101` (Sangiovese Cru) — MARGIN_TOO_LOW|VINTAGE_INVALID: 17.51 pct on a landed cost of 47.70 per bottle against the still minimum of 20 pct (line dated 2025-09-20); shortfall 1.19; vintage 1999 outside 2000-2025
+- `W-103` (Amontillado Cru) — MARGIN_TOO_LOW: 17.38 pct on a landed cost of 16.80 per bottle against the fortified minimum of 18 pct (line dated 2025-09-30); shortfall 0.10
+- `W-104` (Assyrtiko Classic) — VINTAGE_INVALID: vintage 2027 outside 2000-2025
+- `W-108` (Bual Madeira Classic) — MARGIN_TOO_LOW: 14.17 pct on a landed cost of 26.05 per bottle against the fortified minimum of 18 pct (line dated 2025-07-07); shortfall 1.00
+- `W-112` (Corvina Cru) — VINTAGE_INVALID: vintage 2026 outside 2000-2025
+- `W-116` (Cabernet Franc Cru) — VINTAGE_INVALID: vintage 1999 outside 2000-2025
+- `W-117` (Franciacorta Village) — MARGIN_TOO_LOW: 22.49 pct on a landed cost of 20.05 per bottle against the sparkling minimum of 25 pct (line dated 2025-05-30); shortfall 0.50
 - `W-120` (Chianti Riserva Futures) — MARGIN_TOO_LOW: 19.40 pct on a landed cost of 26.80 per bottle against the still minimum of 20 pct (line dated 2025-09-10); shortfall 0.16
 - `W-121` (Colheita Port) — MARGIN_TOO_LOW: 16.60 pct on a landed cost of 25.30 per bottle against the fortified minimum of 18 pct (line dated 2025-05-12); shortfall 0.35
 - `W-133` (Bolgheri Rosso) — MARGIN_TOO_LOW: 6.41 pct on a landed cost of 15.60 per bottle against the still minimum of 20 pct (line dated 2025-08-20); shortfall 2.12

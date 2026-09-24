@@ -200,4 +200,42 @@ for /d %d in (jobs\oracle-g205-r4\*) do @type "%d\verifier\reward.txt"
 harbor run -p tasks\gen-g205-wine-purchasing-margin-audit -a terminus-2 -m openai/glm-5.2 -k 8 -n 4 --env-file glm.env -o jobs --job-name glm-g205-r4 -y
 for /d %d in (jobs\glm-g205-r4\*) do @type "%d\verifier\reward.txt"
 ```
+Results (2026-09-24): `oracle-g205-r4` 1.0; `glm-g205-r4` terminus-2 -k 8 -n 4: **8/8, all 1.0**, 37 m 17 s. Still too easy.
+
+---
+
+# Phase 3 — round 5 ("r5"): remove the scaffolding that defused the one proven discriminator
+
+Re-read of the evidence after 32/32 GLM passes across r1–r4: every rule ever written into
+this task was coded correctly by every run. The accepted bundle's difficulty never came from a
+rule; its four failing runs all made one modelling mistake, treating each export line as a
+record, and nothing in its policy mentioned duplicates. This task carried the same shape (a
+repeated line) from r1, but the superseded/void/active-line mechanics made every script group
+by wine before doing anything else, which defused it. The trap was built and then disarmed by
+the rule beside it.
+
+r5 removes that scaffolding and keeps the coupled reasoning:
+
+| Removed | Kept |
+|---|---|
+| `po_status` column; superseded, void and second-active lines; the S0 clauses about active lines and wines outside the review; the format-contract sentence "a wine that appears on more than one line is one wine and one row" | dated notes with windows, dated manifest rows, pack prices, freight basis, aliases with "earlier invoices stand", allocation changes, per-category minimums, boundary margins |
+
+S0 now reads: "The review covers one wine per `wine_id`, on the purchasing line that carries
+it." The format contract: "One row per wine, keyed by `wine_id` … in any order." That is the
+same wording the accepted bundle shipped and was reviewed as fair. Five wines' lines are
+repeated verbatim by the export (four adjacent, one displaced); no document mentions it.
+
+Data: 136 lines / 131 wines, 136 manifest rows, 18 suppliers, 9 notes. Answer: see
+`solution/files/results.json` (131 wines, shortfall 28.84). Exempt low-margin wines unchanged.
+
+Local replay: gold 1.0 (10/10), 20 lanes green, faithful 1.0, all 20 shortcuts 0.0
+(per-line output → five duplicate ids + population; line count → 136 vs 131).
+
+Harbor runs for r5:
+```
+harbor run -p tasks\gen-g205-wine-purchasing-margin-audit -a oracle -k 1 -n 1 --env-file glm.env -o jobs --job-name oracle-g205-r5 -y
+for /d %d in (jobs\oracle-g205-r5\*) do @type "%d\verifier\reward.txt"
+harbor run -p tasks\gen-g205-wine-purchasing-margin-audit -a terminus-2 -m openai/glm-5.2 -k 8 -n 4 --env-file glm.env -o jobs --job-name glm-g205-r5 -y
+for /d %d in (jobs\glm-g205-r5\*) do @type "%d\verifier\reward.txt"
+```
 Results: (pending)

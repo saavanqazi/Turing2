@@ -9,11 +9,7 @@ allocation is `open` or `closed`. The supplier terms give each supplier's freigh
 
 ## S0 — scope and reading conventions
 
-- The review covers one wine per `wine_id`. A wine may appear on several lines of the
-  purchasing table: only a line whose `po_status` is `active` governs the wine, and where a
-  wine has more than one active line the one with the latest `po_date` governs. Lines marked
-  `superseded` or `void` are not read for any rule. A wine with no active line is outside the
-  review: it is not listed and not counted.
+- The review covers one wine per `wine_id`, on the purchasing line that carries it.
 - A manifest entry is in force from its `effective_from` date. Where a wine has more than one
   manifest entry, the entry with the latest `effective_from` on or before the last day of the
   review year (31 December 2025) governs; an entry dated after that day is not in force for

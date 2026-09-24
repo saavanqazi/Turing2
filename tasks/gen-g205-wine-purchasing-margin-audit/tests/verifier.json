@@ -247,16 +247,16 @@
               "finding": "MARGIN_TOO_LOW"
             },
             "W-47": {
-              "finding": "compliant"
+              "finding": "VINTAGE_INVALID"
             },
             "W-48": {
-              "finding": "compliant"
+              "finding": "MARGIN_TOO_LOW"
             },
             "W-49": {
               "finding": "compliant"
             },
             "W-50": {
-              "finding": "compliant"
+              "finding": "MARGIN_TOO_LOW|VINTAGE_INVALID"
             },
             "W-51": {
               "finding": "MARGIN_TOO_LOW"
@@ -283,10 +283,7 @@
               "finding": "SUPPLIER_MISMATCH"
             },
             "W-59": {
-              "finding": "compliant"
-            },
-            "W-60": {
-              "finding": "compliant"
+              "finding": "MARGIN_TOO_LOW"
             },
             "W-61": {
               "finding": "compliant"
@@ -310,10 +307,10 @@
               "finding": "compliant"
             },
             "W-68": {
-              "finding": "compliant"
+              "finding": "MARGIN_TOO_LOW"
             },
             "W-69": {
-              "finding": "MARGIN_TOO_LOW"
+              "finding": "compliant"
             },
             "W-70": {
               "finding": "compliant"
@@ -340,19 +337,19 @@
               "finding": "compliant"
             },
             "W-78": {
-              "finding": "MARGIN_TOO_LOW"
+              "finding": "compliant"
             },
             "W-79": {
-              "finding": "VINTAGE_INVALID"
+              "finding": "compliant"
             },
             "W-80": {
-              "finding": "MARGIN_TOO_LOW"
+              "finding": "compliant"
             },
             "W-81": {
               "finding": "compliant"
             },
             "W-82": {
-              "finding": "compliant"
+              "finding": "MARGIN_TOO_LOW"
             },
             "W-83": {
               "finding": "compliant"
@@ -367,28 +364,28 @@
               "finding": "compliant"
             },
             "W-87": {
-              "finding": "VINTAGE_INVALID"
+              "finding": "compliant"
             },
             "W-88": {
-              "finding": "compliant"
+              "finding": "MARGIN_TOO_LOW"
             },
             "W-89": {
               "finding": "compliant"
             },
             "W-90": {
-              "finding": "MARGIN_TOO_LOW"
+              "finding": "compliant"
             },
             "W-91": {
               "finding": "compliant"
             },
             "W-92": {
-              "finding": "MARGIN_TOO_LOW|SUPPLIER_MISMATCH"
-            },
-            "W-93": {
               "finding": "compliant"
             },
+            "W-93": {
+              "finding": "MARGIN_TOO_LOW"
+            },
             "W-94": {
-              "finding": "VINTAGE_INVALID"
+              "finding": "compliant"
             },
             "W-95": {
               "finding": "MARGIN_TOO_LOW"
@@ -397,67 +394,67 @@
               "finding": "compliant"
             },
             "W-97": {
-              "finding": "MARGIN_TOO_LOW"
+              "finding": "compliant"
             },
             "W-98": {
-              "finding": "MARGIN_TOO_LOW"
+              "finding": "compliant"
             },
             "W-99": {
-              "finding": "VINTAGE_INVALID"
+              "finding": "SUPPLIER_MISMATCH"
             },
             "W-100": {
-              "finding": "compliant"
+              "finding": "VINTAGE_INVALID"
             },
             "W-101": {
-              "finding": "compliant"
+              "finding": "MARGIN_TOO_LOW|VINTAGE_INVALID"
             },
             "W-102": {
-              "finding": "VINTAGE_INVALID"
+              "finding": "compliant"
             },
             "W-103": {
               "finding": "MARGIN_TOO_LOW"
             },
             "W-104": {
-              "finding": "compliant"
+              "finding": "VINTAGE_INVALID"
             },
             "W-105": {
               "finding": "compliant"
             },
             "W-106": {
-              "finding": "MARGIN_TOO_LOW"
+              "finding": "compliant"
             },
             "W-107": {
-              "finding": "MARGIN_TOO_LOW"
+              "finding": "compliant"
             },
             "W-108": {
               "finding": "MARGIN_TOO_LOW"
             },
             "W-109": {
-              "finding": "VINTAGE_INVALID"
+              "finding": "compliant"
             },
             "W-110": {
-              "finding": "MARGIN_TOO_LOW"
+              "finding": "compliant"
             },
             "W-111": {
               "finding": "compliant"
             },
             "W-112": {
-              "finding": "compliant"
+              "finding": "VINTAGE_INVALID"
             },
             "W-113": {
               "finding": "compliant"
             },
             "W-114": {
-              "finding": "MARGIN_TOO_LOW"
+              "finding": "compliant"
             },
             "W-115": {
               "finding": "compliant"
             },
             "W-116": {
-              "finding": "compliant"
+              "finding": "VINTAGE_INVALID"
             },
             "W-117": {
-              "finding": "VINTAGE_INVALID|SUPPLIER_MISMATCH"
+              "finding": "MARGIN_TOO_LOW"
             },
             "W-118": {
               "finding": "compliant"
@@ -500,6 +497,9 @@
             },
             "W-132": {
               "finding": "SUPPLIER_MISMATCH"
+            },
+            "W-60": {
+              "finding": "compliant"
             }
           },
           "row_set": [
@@ -562,7 +562,6 @@
             "W-57",
             "W-58",
             "W-59",
-            "W-60",
             "W-61",
             "W-62",
             "W-63",
@@ -633,7 +632,8 @@
             "W-127",
             "W-128",
             "W-131",
-            "W-132"
+            "W-132",
+            "W-60"
           ],
           "columns": [
             "wine_id",
@@ -695,7 +695,7 @@
       },
       "assertion": {
         "type": "deterministic",
-        "expected": "(?s)(?=.*\\bW\\-03\\b)(?=.*\\bW\\-04\\b)(?=.*\\bW\\-07\\b)(?=.*\\bW\\-10\\b)(?=.*\\bW\\-13\\b)(?=.*\\bW\\-14\\b)(?=.*\\bW\\-15\\b)(?=.*\\bW\\-16\\b)(?=.*\\bW\\-19\\b)(?=.*\\bW\\-20\\b)(?=.*\\bW\\-21\\b)(?=.*\\bW\\-22\\b)(?=.*\\bW\\-23\\b)(?=.*\\bW\\-25\\b)(?=.*\\bW\\-28\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-32\\b)(?=.*\\bW\\-35\\b)(?=.*\\bW\\-36\\b)(?=.*\\bW\\-38\\b)(?=.*\\bW\\-40\\b)(?=.*\\bW\\-41\\b)(?=.*\\bW\\-42\\b)(?=.*\\bW\\-43\\b)(?=.*\\bW\\-45\\b)(?=.*\\bW\\-46\\b)(?=.*\\bW\\-51\\b)(?=.*\\bW\\-54\\b)(?=.*\\bW\\-57\\b)(?=.*\\bW\\-58\\b)(?=.*\\bW\\-63\\b)(?=.*\\bW\\-65\\b)(?=.*\\bW\\-69\\b)(?=.*\\bW\\-71\\b)(?=.*\\bW\\-72\\b)(?=.*\\bW\\-75\\b)(?=.*\\bW\\-78\\b)(?=.*\\bW\\-79\\b)(?=.*\\bW\\-80\\b)(?=.*\\bW\\-87\\b)(?=.*\\bW\\-90\\b)(?=.*\\bW\\-92\\b)(?=.*\\bW\\-94\\b)(?=.*\\bW\\-95\\b)(?=.*\\bW\\-97\\b)(?=.*\\bW\\-98\\b)(?=.*\\bW\\-99\\b)(?=.*\\bW\\-102\\b)(?=.*\\bW\\-103\\b)(?=.*\\bW\\-106\\b)(?=.*\\bW\\-107\\b)(?=.*\\bW\\-108\\b)(?=.*\\bW\\-109\\b)(?=.*\\bW\\-110\\b)(?=.*\\bW\\-114\\b)(?=.*\\bW\\-117\\b)(?=.*\\bW\\-120\\b)(?=.*\\bW\\-121\\b)(?=.*\\bW\\-133\\b)(?=.*\\bW\\-124\\b)(?=.*\\bW\\-126\\b)(?=.*\\bW\\-127\\b)(?=.*\\bW\\-131\\b)(?=.*\\bW\\-132\\b)",
+        "expected": "(?s)(?=.*\\bW\\-03\\b)(?=.*\\bW\\-04\\b)(?=.*\\bW\\-07\\b)(?=.*\\bW\\-10\\b)(?=.*\\bW\\-13\\b)(?=.*\\bW\\-14\\b)(?=.*\\bW\\-15\\b)(?=.*\\bW\\-16\\b)(?=.*\\bW\\-19\\b)(?=.*\\bW\\-20\\b)(?=.*\\bW\\-21\\b)(?=.*\\bW\\-22\\b)(?=.*\\bW\\-23\\b)(?=.*\\bW\\-25\\b)(?=.*\\bW\\-28\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-32\\b)(?=.*\\bW\\-35\\b)(?=.*\\bW\\-36\\b)(?=.*\\bW\\-38\\b)(?=.*\\bW\\-40\\b)(?=.*\\bW\\-41\\b)(?=.*\\bW\\-42\\b)(?=.*\\bW\\-43\\b)(?=.*\\bW\\-45\\b)(?=.*\\bW\\-46\\b)(?=.*\\bW\\-47\\b)(?=.*\\bW\\-48\\b)(?=.*\\bW\\-50\\b)(?=.*\\bW\\-51\\b)(?=.*\\bW\\-54\\b)(?=.*\\bW\\-57\\b)(?=.*\\bW\\-58\\b)(?=.*\\bW\\-59\\b)(?=.*\\bW\\-63\\b)(?=.*\\bW\\-65\\b)(?=.*\\bW\\-68\\b)(?=.*\\bW\\-71\\b)(?=.*\\bW\\-72\\b)(?=.*\\bW\\-75\\b)(?=.*\\bW\\-82\\b)(?=.*\\bW\\-88\\b)(?=.*\\bW\\-93\\b)(?=.*\\bW\\-95\\b)(?=.*\\bW\\-99\\b)(?=.*\\bW\\-100\\b)(?=.*\\bW\\-101\\b)(?=.*\\bW\\-103\\b)(?=.*\\bW\\-104\\b)(?=.*\\bW\\-108\\b)(?=.*\\bW\\-112\\b)(?=.*\\bW\\-116\\b)(?=.*\\bW\\-117\\b)(?=.*\\bW\\-120\\b)(?=.*\\bW\\-121\\b)(?=.*\\bW\\-133\\b)(?=.*\\bW\\-124\\b)(?=.*\\bW\\-126\\b)(?=.*\\bW\\-127\\b)(?=.*\\bW\\-131\\b)(?=.*\\bW\\-132\\b)",
         "deterministic": {
           "path": "$.text",
           "comparison": "regex_match"
@@ -808,7 +808,7 @@
               "tolerance": null
             },
             "margin_too_low_count": {
-              "value": 41,
+              "value": 39,
               "tolerance": null
             },
             "vintage_invalid_count": {
@@ -816,15 +816,15 @@
               "tolerance": null
             },
             "supplier_mismatch_count": {
-              "value": 14,
+              "value": 13,
               "tolerance": null
             },
             "compliant_count": {
-              "value": 67,
+              "value": 70,
               "tolerance": null
             },
             "margin_shortfall_total": {
-              "value": 27.79,
+              "value": 28.84,
               "tolerance": 0.01
             }
           },

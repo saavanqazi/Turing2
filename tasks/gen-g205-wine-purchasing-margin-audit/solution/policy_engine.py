@@ -56,8 +56,6 @@ class Opts:
     flat20: bool = False
     no_freight: bool = False
     expected_freight: bool = False
-    first_line_wins: bool = False
-    last_line_wins: bool = False
     per_line: bool = False
     count_lines: bool = False
     all_futures_exempt: bool = False
@@ -75,9 +73,6 @@ class Opts:
     notes_ignored: bool = False
     notes_global: bool = False
     notes_latest_only: bool = False      # only the last note per subject applied (windows ignored)
-    active_first_wins: bool = False      # two active lines: first listed instead of latest po_date
-    unreviewed_listed: bool = False      # wines with no active line still listed as compliant
-    inactive_lines_dated: bool = False   # note dates read against any line, not the governing one
 
 
 @dataclass
@@ -132,39 +127,19 @@ def evaluate(input_dir: Path, opts: Opts | None = None, notes: list[dict] | None
             amt = amt / Decimal(r["case_size"])
         terms[n(r["supplier"])] = amt
 
-    # ---- purchasing lines (S0: active line governs; several active → latest po_date) -----
+    # ---- purchasing lines (S0: one wine per wine_id; the export may repeat a line verbatim) ---
     lines = rows(input_dir / "wine_purchases.csv")
-    order: list[str] = []
-    seen: set[str] = set()
-    for r in lines:
-        k = n(r["wine_id"])
-        if k not in seen:
-            seen.add(k)
-            order.append(k)
-    governing: dict[str, dict[str, str]] = {}
-    any_line: dict[str, dict[str, str]] = {}
     if o.per_line:
-        chosen = [(n(r["wine_id"]), r) for r in lines if n(r["po_status"]) == "active"]
+        chosen = [(n(r["wine_id"]), r) for r in lines]
     else:
+        first: dict[str, dict[str, str]] = {}
+        order: list[str] = []
         for r in lines:
             k = n(r["wine_id"])
-            any_line.setdefault(k, r)
-            if o.first_line_wins:
-                governing.setdefault(k, r)
-            elif o.last_line_wins:
-                governing[k] = r
-            elif n(r["po_status"]) == "active":
-                if k not in governing:
-                    governing[k] = r
-                elif not o.active_first_wins and r["po_date"].strip() > governing[k]["po_date"].strip():
-                    governing[k] = r
-        chosen = []
-        for k in order:
-            if k in governing:
-                chosen.append((k, governing[k]))
-            elif o.unreviewed_listed:
-                chosen.append((k, any_line[k]))
-            # else: S0 — a wine with no active line is outside the review
+            if k not in first:
+                first[k] = r
+                order.append(k)
+        chosen = [(k, first[k]) for k in order]
 
     # ---- notes -----------------------------------------------------------------------
     def note_state(kind: str, subject_key: str, subject_val: str, po_date: str):
@@ -183,8 +158,6 @@ def evaluate(input_dir: Path, opts: Opts | None = None, notes: list[dict] | None
         wid = r["wine_id"].strip()
         m = manifest.get(k)
         po_date = r["po_date"].strip()
-        if o.inactive_lines_dated:
-            po_date = max(x["po_date"].strip() for x in lines if n(x["wine_id"]) == k)
         bottles = Decimal(1) if o.pack_ignored else Decimal(re.fullmatch(r"(\d+)x\d+cl", r["pack"].strip()).group(1))
         purchase = Decimal(r["purchase_price"]) / bottles
         selling = Decimal(r["selling_price"]) / bottles

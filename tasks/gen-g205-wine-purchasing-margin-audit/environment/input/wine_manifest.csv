@@ -47,21 +47,21 @@ W-43,2024-01-01,still,Bordeaux Negoce,Left Bank Brokers,open,N
 W-44,2024-01-01,still,Tuscan Vines,,,N
 W-45,2024-01-01,fortified,Rioja Direct,,,Y
 W-46,2024-01-01,still,Barossa Exports,,closed,N
-W-47,2024-01-01,sparkling,Mosel Handel,,,N
-W-48,2024-01-01,sparkling,Reims Cellars,,,Y
-W-49,2024-01-01,still,Mosel Handel,,,N
+W-47,2024-01-01,still,Tuscan Vines,,,N
+W-48,2024-01-01,fortified,Rioja Direct,,,Y
+W-49,2024-01-01,still,Loire Direct,,,N
 W-50,2025-03-01,still,Cape Winelands Ltd,,,N
 W-50,2023-05-01,still,Napa Ridge Imports,,,N
-W-51,2024-01-01,fortified,Douro Trading,,,Y
-W-52,2024-01-01,still,Rioja Direct,,,N
-W-53,2024-01-01,still,Wachau Kellerei,,,N
+W-51,2024-01-01,still,Willamette Partners,,,N
+W-52,2024-01-01,still,Barossa Exports,,,N
+W-53,2024-01-01,still,Rioja Direct,,,N
 W-54,2024-01-01,still,Mendoza Andes SA,,,N
 W-55,2024-01-01,still,Bordeaux Negoce,,,N
 W-55,2026-02-01,still,Finger Lakes Co,,,N
 W-56,2024-01-01,still,Barossa Exports,,,N
 W-57,2024-01-01,still,Mendoza Andes SA,,,N
 W-58,2024-01-01,still,Cape Winelands Ltd,,,N
-W-59,2024-01-01,still,Cape Winelands Ltd,,,N
+W-59,2024-01-01,still,Mosel Handel,,,N
 W-60,2024-01-01,still,Bordeaux Negoce,,,N
 W-61,2023-05-01,still,Mosel Handel,,,N
 W-61,2025-03-01,still,Wachau Kellerei,,,N
@@ -70,9 +70,9 @@ W-63,2024-01-01,still,Finger Lakes Co,,,N
 W-64,2024-01-01,fortified,Cape Winelands Ltd,,,Y
 W-65,2024-01-01,still,Barossa Exports,,,N
 W-66,2024-01-01,still,Loire Direct,,,N
-W-67,2024-01-01,still,Finger Lakes Co,,open,N
-W-68,2024-01-01,still,Rioja Direct,,,N
-W-69,2024-01-01,fortified,Cape Winelands Ltd,,,N
+W-67,2024-01-01,still,Napa Ridge Imports,,,N
+W-68,2024-01-01,sparkling,Reims Cellars,,,Y
+W-69,2024-01-01,still,Rioja Direct,,,N
 W-70,2024-01-01,still,Napa Ridge Imports,,,N
 W-71,2024-01-01,still,Rioja Direct,,,N
 W-72,2025-03-01,still,Reims Cellars,,,N
@@ -82,49 +82,49 @@ W-74,2024-01-01,still,Napa Ridge Imports,,,N
 W-75,2024-01-01,still,Rioja Direct,,,N
 W-76,2024-01-01,still,Bordeaux Negoce,,,N
 W-77,2024-01-01,still,Wachau Kellerei,,,N
-W-78,2024-01-01,still,Mendoza Andes SA,,,N
-W-79,2024-01-01,still,Finger Lakes Co,,,N
-W-80,2024-01-01,sparkling,Loire Direct,,,Y
-W-81,2024-01-01,still,Barossa Exports,,,N
-W-82,2024-01-01,still,Napa Ridge Imports,,,N
-W-83,2024-01-01,fortified,Rioja Direct,,,N
-W-84,2024-01-01,still,Wachau Kellerei,,,N
-W-85,2024-01-01,still,Bordeaux Negoce,,,N
-W-86,2024-01-01,fortified,Cape Winelands Ltd,,,N
-W-87,2024-01-01,fortified,Rioja Direct,,,N
-W-88,2024-01-01,still,Rioja Direct,,open,N
-W-88,2026-02-01,still,Finger Lakes Co,,open,N
-W-89,2024-01-01,still,Wachau Kellerei,,open,N
-W-90,2024-01-01,sparkling,Loire Direct,,,N
-W-91,2024-01-01,fortified,Cape Winelands Ltd,,,Y
-W-92,2024-01-01,still,Loire Direct,,,N
-W-93,2024-01-01,still,Wachau Kellerei,,,N
-W-94,2024-01-01,still,Loire Direct,,,N
-W-95,2024-01-01,still,Rioja Direct,,,N
-W-96,2024-01-01,fortified,Rioja Direct,,,N
-W-97,2024-01-01,still,Willamette Partners,,,N
-W-98,2024-01-01,sparkling,Mosel Handel,,,N
-W-99,2024-01-01,still,Barossa Exports,,,N
-W-100,2024-01-01,still,Cape Winelands Ltd,,,N
-W-101,2024-01-01,still,Tuscan Vines,,,N
-W-102,2024-01-01,sparkling,Tuscan Vines,,,N
-W-103,2024-01-01,still,Willamette Partners,,,N
-W-104,2024-01-01,still,Rioja Direct,,,N
-W-105,2024-01-01,still,Barossa Exports,,,N
-W-106,2024-01-01,fortified,Douro Trading,,,N
-W-107,2024-01-01,still,Napa Ridge Imports,,,N
-W-108,2024-01-01,sparkling,Reims Cellars,,,Y
-W-109,2024-01-01,still,Mendoza Andes SA,,,N
-W-110,2024-01-01,still,Mosel Handel,,,N
-W-111,2024-01-01,still,Wachau Kellerei,,,N
-W-112,2024-01-01,sparkling,Reims Cellars,,,Y
-W-113,2024-01-01,still,Napa Ridge Imports,,open,N
-W-114,2024-01-01,still,Finger Lakes Co,,,N
-W-115,2024-01-01,still,Mosel Handel,,,N
-W-116,2024-01-01,fortified,Douro Trading,,,Y
-W-117,2024-01-01,still,Loire Direct,,,N
-W-118,2024-01-01,still,Finger Lakes Co,,,N
-W-119,2024-01-01,sparkling,Loire Direct,,,N
+W-78,2024-01-01,still,Cape Winelands Ltd,,closed,N
+W-79,2024-01-01,still,Tuscan Vines,,,N
+W-80,2024-01-01,sparkling,Mosel Handel,,,Y
+W-81,2024-01-01,sparkling,Rioja Direct,,,Y
+W-82,2024-01-01,still,Willamette Partners,,,N
+W-83,2024-01-01,still,Mendoza Andes SA,,,N
+W-84,2024-01-01,sparkling,Mosel Handel,,,Y
+W-85,2024-01-01,sparkling,Loire Direct,,,N
+W-86,2024-01-01,still,Bordeaux Negoce,,,N
+W-87,2024-01-01,fortified,Cape Winelands Ltd,,,N
+W-88,2024-01-01,still,Finger Lakes Co,,,N
+W-88,2026-02-01,still,Finger Lakes Co,,,N
+W-89,2024-01-01,still,Rioja Direct,,open,N
+W-90,2024-01-01,fortified,Cape Winelands Ltd,,,Y
+W-91,2024-01-01,still,Finger Lakes Co,,,N
+W-92,2024-01-01,sparkling,Mosel Handel,,,Y
+W-93,2024-01-01,fortified,Rioja Direct,,,N
+W-94,2024-01-01,still,Rioja Direct,,closed,N
+W-95,2024-01-01,sparkling,Loire Direct,,,N
+W-96,2024-01-01,still,Rioja Direct,,,N
+W-97,2024-01-01,still,Barossa Exports,,open,N
+W-98,2024-01-01,still,Loire Direct,,,N
+W-99,2024-01-01,still,Tuscan Vines,,,N
+W-100,2024-01-01,still,Bordeaux Negoce,,,N
+W-101,2024-01-01,still,Bordeaux Negoce,,,N
+W-102,2024-01-01,sparkling,Loire Direct,,,N
+W-103,2024-01-01,fortified,Cape Winelands Ltd,,,N
+W-104,2024-01-01,still,Cape Winelands Ltd,,,N
+W-105,2024-01-01,still,Bordeaux Negoce,,,N
+W-106,2024-01-01,still,Mendoza Andes SA,,,N
+W-107,2024-01-01,still,Mendoza Andes SA,,,N
+W-108,2024-01-01,fortified,Douro Trading,,,N
+W-109,2024-01-01,still,Bordeaux Negoce,,,N
+W-110,2024-01-01,fortified,Cape Winelands Ltd,,,N
+W-111,2024-01-01,still,Mosel Handel,,open,N
+W-112,2024-01-01,still,Loire Direct,,,N
+W-113,2024-01-01,still,Finger Lakes Co,,,N
+W-114,2024-01-01,still,Napa Ridge Imports,,closed,N
+W-115,2024-01-01,still,Mendoza Andes SA,,,N
+W-116,2024-01-01,still,Mendoza Andes SA,,,N
+W-117,2024-01-01,sparkling,Tuscan Vines,,,N
+W-118,2024-01-01,still,Cape Winelands Ltd,,,N
+W-119,2024-01-01,still,Barossa Exports,,,N
 W-120,2024-01-01,still,Tuscan Vines,,open,N
 W-121,2024-01-01,fortified,Douro Trading,,,Y
 W-122,2024-01-01,fortified,Douro Trading,,,Y
@@ -135,5 +135,3 @@ W-125,2024-01-01,still,Barossa Exports,,,N
 W-126,2024-01-01,still,Barossa Exports,,,N
 W-127,2024-01-01,still,Bordeaux Negoce,Left Bank Brokers,open,N
 W-128,2024-01-01,still,Rioja Direct,,,N
-W-129,2024-01-01,still,Mosel Handel,,,N
-W-130,2024-01-01,sparkling,Reims Cellars,,,Y

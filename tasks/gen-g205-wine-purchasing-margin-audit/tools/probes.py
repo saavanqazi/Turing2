@@ -41,9 +41,7 @@ PROBES = {
     "flat 20 pct minimum for every category": {"flat20": True},
     "margin on purchase price, freight ignored": {"no_freight": True},
     "freight of the manifest's expected supplier": {"expected_freight": True},
-    "first line per wine wins (status ignored)": {"first_line_wins": True},
-    "last line per wine wins (status ignored)": {"last_line_wins": True},
-    "one output row per active line (repeated line kept)": {"per_line": True},
+    "one output row per export line (repeated lines kept)": {"per_line": True},
     "wine_count = number of input lines": {"count_lines": True},
     "every futures wine exempt (allocation ignored)": {"all_futures_exempt": True},
     "alternate supplier accepted on stock wines": {"alt_on_stock": True},
@@ -60,9 +58,6 @@ PROBES = {
     "buyer's notes ignored": {"notes_ignored": True},
     "buyer's notes applied to every line regardless of date": {"notes_global": True},
     "only the latest note per subject applied (windows ignored)": {"notes_latest_only": True},
-    "two active lines: first listed wins instead of latest po_date": {"active_first_wins": True},
-    "wines with no active line still listed": {"unreviewed_listed": True},
-    "note dates read against the wine's latest line of any status": {"inactive_lines_dated": True},
 }
 
 if __name__ == "__main__":
