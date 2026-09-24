@@ -1,8 +1,9 @@
 {
-  "wine_count": 131,
-  "margin_too_low_count": 39,
-  "vintage_invalid_count": 15,
-  "supplier_mismatch_count": 13,
-  "compliant_count": 70,
-  "margin_shortfall_total": 28.84
+  "wine_count": 36,
+  "margin_too_low_count": 12,
+  "vintage_invalid_count": 4,
+  "supplier_mismatch_count": 3,
+  "compliant_count": 19,
+  "margin_shortfall_total": 570.4,
+  "cost_of_bottles_sold_total": 83892.03
 }

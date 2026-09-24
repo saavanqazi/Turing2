@@ -9,7 +9,7 @@ Deliver exactly these files, in your working directory:
 ## `wine_findings.csv`
 
 Header, exactly: `wine_id,finding`
-One row per wine, keyed by `wine_id` as `wine_purchases.csv` writes it, in any order.
+One row per wine in the manifest, keyed by `wine_id` as the manifest writes it, in any order.
 `finding` is `compliant` for a wine with no finding, otherwise the finding codes the wine
 carries, joined with `|` in policy order: `MARGIN_TOO_LOW`, then `VINTAGE_INVALID`, then
 `SUPPLIER_MISMATCH` (for example `MARGIN_TOO_LOW|SUPPLIER_MISMATCH`).
@@ -25,20 +25,20 @@ W-00,compliant
 ## `wine_memo.md`
 
 Free-form Markdown. Name every wine that carries a finding, with its code(s) and the reason,
-and name every wine whose margin is below its minimum but which the policy leaves compliant,
-with the clause that exempts it.
+and name every wine whose realized margin is below its minimum but which the policy leaves
+compliant, with the clause that exempts it.
 
 ## `results.json`
 
 A JSON object with exactly these keys and nothing else:
 
-- `wine_count` — number: distinct wines reviewed (one per `wine_id`)
+- `wine_count` — number: wines reviewed
 - `margin_too_low_count` — number: wines carrying `MARGIN_TOO_LOW`
 - `vintage_invalid_count` — number: wines carrying `VINTAGE_INVALID`
 - `supplier_mismatch_count` — number: wines carrying `SUPPLIER_MISMATCH`
 - `compliant_count` — number: wines carrying no finding
-- `margin_shortfall_total` — number: the margin shortfall total as the policy defines it, in
-  the table's currency to the cent
+- `margin_shortfall_total` — number: the margin shortfall total as the policy defines it, to the cent
+- `cost_of_bottles_sold_total` — number: the cost of bottles sold total as the policy defines it, to the cent
 
 A wine carrying two codes counts once under each code, so the three code counts need not sum
 to `wine_count - compliant_count`. Write numbers plain: no thousands separators, no currency
@@ -53,6 +53,7 @@ Shape example (placeholder values):
   "vintage_invalid_count": 0,
   "supplier_mismatch_count": 0,
   "compliant_count": 0,
-  "margin_shortfall_total": 0.00
+  "margin_shortfall_total": 0.00,
+  "cost_of_bottles_sold_total": 0.00
 }
 ```

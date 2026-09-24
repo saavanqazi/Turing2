@@ -238,4 +238,69 @@ for /d %d in (jobs\oracle-g205-r5\*) do @type "%d\verifier\reward.txt"
 harbor run -p tasks\gen-g205-wine-purchasing-margin-audit -a terminus-2 -m openai/glm-5.2 -k 8 -n 4 --env-file glm.env -o jobs --job-name glm-g205-r5 -y
 for /d %d in (jobs\glm-g205-r5\*) do @type "%d\verifier\reward.txt"
 ```
+Results (2026-09-24): `oracle-g205-r5` 1.0; `glm-g205-r5` terminus-2 -k 8 -n 4: **8/8, all 1.0**, 35 m 43 s. All eight runs printed diagnostics (duplicate ids, missing manifest rows, spelling variants) before coding and found the repeated lines deliberately.
+
+---
+
+# Redesign ("r6"): realized margin from a FIFO stock ledger
+
+## Why five rounds failed
+
+40 of 40 GLM-5.2 runs passed r1–r5. The r5 trajectories show the model's method: print every
+file, run diagnostics for duplicate ids, missing keys and spelling variants, then transcribe
+each policy clause into one script. Every task version so far was a per-wine classification:
+each wine's answer was a short independent computation over one row plus lookups. Diagnostics
+catch every visible anomaly; transcription catches every stated rule. Adding rules or data
+shapes to that structure cannot produce failures.
+
+## What changed
+
+The margin is now the margin actually realized in 2025, computed from a stock ledger costed
+first in, first out at landed cost ("state across steps" in the hardening guide). A wine's
+cost of bottles sold depends on the whole ordered history of its stock: which layers exist,
+in what order they are consumed, and what returns and write-offs did to them. A costing error
+yields a plausible wrong number that no structural diagnostic can reveal.
+
+| Source | Content |
+|---|---|
+| `stock_movements.csv` | 403 movements posted in 2025, listed in entry order (movement_id), not posted order: RECEIPT, SALE, WRITE_OFF, SUPPLIER_RETURN (references a receipt), CUSTOMER_RETURN (references a sale) |
+| `opening_stock.csv` | 54 cost layers carried in from 2024, listed newest first as a stock system exports them |
+| `wine_manifest.csv` | 36 wines: category, stock/futures, allocation, expected and alternate supplier, NV allowed |
+| `supplier_terms.csv` | 14 suppliers, freight per bottle or per case |
+| `margin_policy.md` rev. 3 | S1 FIFO costing (posted-date order, oldest layer first, supplier returns from their receipt's layer, customer returns re-enter as a new layer at the cost of the bottles the sale took last); WM1 realized margin with write-offs and supplier returns outside cost of bottles sold; WM2/WM3 on 2025 receipts; futures open-allocation exemption kept |
+
+`results.json` gains `cost_of_bottles_sold_total`, the one figure every costing step feeds.
+The deliverable shapes and the three finding codes are unchanged. `wine_purchases.csv` and
+`purchasing_notes.md` are removed. `solution/ledger_engine.py` replaces `policy_engine.py`.
+
+Answer: 36 wines, 12 MARGIN_TOO_LOW, 4 VINTAGE_INVALID, 3 SUPPLIER_MISMATCH, 19 compliant,
+shortfall 570.40, cost of bottles sold 83892.03. Exempt under-minimum wines: W-02, W-27, W-34.
+
+## Fairness
+
+Every rule is stated once in the policy; nothing is left to a default. The generator guarantees
+that no customer return spans two cost layers, that no supplier return exceeds its receipt's
+remaining bottles, that no wine is ever oversold in posted-date order, and that no two movements
+of one wine share a posted date. The engine asserts no overselling on the gold.
+
+## Local replay
+
+- gold 1.0 (10/10); `test_outputs.py` 21 lanes green
+- `tools/probes.py`: faithful 1.0; all 23 shortcuts 0.0, 21 of them silent (no overselling, no
+  crash): listed order instead of posted order, opening layers newest-first, write-offs ignored
+  or counted in cost, supplier return FIFO or ignored, customer return ignored / costed at first
+  layer / costed at sale average / put at the front of the queue / revenue-only, freight basis,
+  freight ignored, flat 20, futures all/none exempt, case-sensitive names, margin rounded
+  (W-16 at 19.97 %), alternate on stock, NV invalid, futures vintage cap. Average cost and LIFO
+  are loud (they cannot place a supplier return).
+- Removed probe: float rounding of the shortfall moves the total by one cent, inside the fair
+  0.01 tolerance.
+
+Harbor runs:
+```
+harbor run -p tasks\gen-g205-wine-purchasing-margin-audit -a oracle -k 1 -n 1 --env-file glm.env -o jobs --job-name oracle-g205-r6 -y
+for /d %d in (jobs\oracle-g205-r6\*) do @type "%d\verifier\reward.txt"
+harbor run -p tasks\gen-g205-wine-purchasing-margin-audit -a terminus-2 -m openai/glm-5.2 -k 8 -n 4 --env-file glm.env -o jobs --job-name glm-g205-r6 -y
+for /d %d in (jobs\glm-g205-r6\*) do @type "%d\verifier\reward.txt"
+```
 Results: (pending)

@@ -56,8 +56,8 @@
     {
       "name": "findings_table_trap",
       "metadata": {
-        "how_justification": "Parses wine_findings.csv with csv.read_rows and applies table_equals to the finding cell of each wine whose margin is below the minimum but which WM1 leaves compliant (matched by 'wine_id'); a failure names the exact row.",
-        "why_justification": "A futures wine with an open allocation is exempt from WM1 whatever its margin; flagging it overstates the findings. Entailed by: \"`finding` is `compliant` for a wine with no finding\" and WM1's exemption clause.",
+        "how_justification": "Parses wine_findings.csv with csv.read_rows and applies table_equals to the finding cell of each wine whose realized margin is below its minimum but which WM1 leaves compliant (matched by 'wine_id'); a failure names the exact row.",
+        "why_justification": "A futures wine with an open allocation is exempt from WM1 whatever its realized margin; flagging it overstates the findings. Entailed by: \"`finding` is `compliant` for a wine with no finding\" and WM1's exemption clause.",
         "tag": "core"
       },
       "source": {
@@ -78,14 +78,11 @@
             "W-02": {
               "finding": "compliant"
             },
-            "W-17": {
+            "W-27": {
               "finding": "compliant"
             },
-            "W-29": {
+            "W-34": {
               "finding": "VINTAGE_INVALID"
-            },
-            "W-30": {
-              "finding": "compliant"
             }
           },
           "cell_types": {
@@ -101,8 +98,8 @@
     {
       "name": "findings_table",
       "metadata": {
-        "how_justification": "Parses wine_findings.csv with csv.read_rows and applies table_equals: every graded cell of 127 rows plus the full 131-row population as a row_set lock (a duplicated or missing wine fails the lock), and the delivered column set closed to the stated header, with the finding cell compared as text (case-insensitive, whitespace-collapsed). A failure names the exact row.",
-        "why_justification": "Every wine's finding under WM1-WM3 on its governing line, with codes joined in policy order, is graded. Entailed by: \"One row per wine, keyed by `wine_id` as `wine_purchases.csv` writes it, in any order. A wine that appears on more than one line of the purchasing table is one wine and one row ... joined with `|` in policy order\"",
+        "how_justification": "Parses wine_findings.csv with csv.read_rows and applies table_equals: every graded cell of 33 rows plus the full 36-row population as a row_set lock (a duplicated or missing wine fails the lock), and the delivered column set closed to the stated header, with the finding cell compared as text (case-insensitive, whitespace-collapsed). A failure names the exact row.",
+        "why_justification": "Every manifest wine's finding under WM1-WM3, with codes joined in policy order, is graded. Entailed by: \"One row per wine in the manifest, keyed by `wine_id` as the manifest writes it, in any order ... joined with `|` in policy order\"",
         "tag": "core"
       },
       "source": {
@@ -124,19 +121,19 @@
               "finding": "compliant"
             },
             "W-03": {
-              "finding": "MARGIN_TOO_LOW"
+              "finding": "compliant"
             },
             "W-04": {
               "finding": "VINTAGE_INVALID"
             },
             "W-05": {
-              "finding": "compliant"
+              "finding": "MARGIN_TOO_LOW|SUPPLIER_MISMATCH"
             },
             "W-06": {
-              "finding": "compliant"
+              "finding": "MARGIN_TOO_LOW"
             },
             "W-07": {
-              "finding": "MARGIN_TOO_LOW"
+              "finding": "compliant"
             },
             "W-08": {
               "finding": "compliant"
@@ -145,10 +142,10 @@
               "finding": "compliant"
             },
             "W-10": {
-              "finding": "MARGIN_TOO_LOW"
+              "finding": "compliant"
             },
             "W-11": {
-              "finding": "compliant"
+              "finding": "MARGIN_TOO_LOW|VINTAGE_INVALID"
             },
             "W-12": {
               "finding": "compliant"
@@ -160,10 +157,13 @@
               "finding": "VINTAGE_INVALID"
             },
             "W-15": {
-              "finding": "VINTAGE_INVALID"
+              "finding": "MARGIN_TOO_LOW"
             },
             "W-16": {
-              "finding": "SUPPLIER_MISMATCH"
+              "finding": "MARGIN_TOO_LOW"
+            },
+            "W-17": {
+              "finding": "MARGIN_TOO_LOW"
             },
             "W-18": {
               "finding": "compliant"
@@ -172,34 +172,37 @@
               "finding": "SUPPLIER_MISMATCH"
             },
             "W-20": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-21": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-22": {
-              "finding": "VINTAGE_INVALID|SUPPLIER_MISMATCH"
-            },
-            "W-23": {
-              "finding": "MARGIN_TOO_LOW|SUPPLIER_MISMATCH"
-            },
-            "W-24": {
               "finding": "compliant"
             },
+            "W-21": {
+              "finding": "compliant"
+            },
+            "W-22": {
+              "finding": "compliant"
+            },
+            "W-23": {
+              "finding": "compliant"
+            },
+            "W-24": {
+              "finding": "MARGIN_TOO_LOW"
+            },
             "W-25": {
-              "finding": "MARGIN_TOO_LOW|VINTAGE_INVALID"
+              "finding": "MARGIN_TOO_LOW"
             },
             "W-26": {
               "finding": "compliant"
             },
-            "W-27": {
+            "W-28": {
               "finding": "compliant"
             },
-            "W-28": {
-              "finding": "MARGIN_TOO_LOW"
+            "W-29": {
+              "finding": "compliant"
+            },
+            "W-30": {
+              "finding": "SUPPLIER_MISMATCH"
             },
             "W-31": {
-              "finding": "compliant"
+              "finding": "MARGIN_TOO_LOW"
             },
             "W-32": {
               "finding": "MARGIN_TOO_LOW"
@@ -207,298 +210,10 @@
             "W-33": {
               "finding": "compliant"
             },
-            "W-34": {
-              "finding": "compliant"
-            },
             "W-35": {
               "finding": "MARGIN_TOO_LOW"
             },
             "W-36": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-37": {
-              "finding": "compliant"
-            },
-            "W-38": {
-              "finding": "SUPPLIER_MISMATCH"
-            },
-            "W-39": {
-              "finding": "compliant"
-            },
-            "W-40": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-41": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-42": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-43": {
-              "finding": "SUPPLIER_MISMATCH"
-            },
-            "W-44": {
-              "finding": "compliant"
-            },
-            "W-45": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-46": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-47": {
-              "finding": "VINTAGE_INVALID"
-            },
-            "W-48": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-49": {
-              "finding": "compliant"
-            },
-            "W-50": {
-              "finding": "MARGIN_TOO_LOW|VINTAGE_INVALID"
-            },
-            "W-51": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-52": {
-              "finding": "compliant"
-            },
-            "W-53": {
-              "finding": "compliant"
-            },
-            "W-54": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-55": {
-              "finding": "compliant"
-            },
-            "W-56": {
-              "finding": "compliant"
-            },
-            "W-57": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-58": {
-              "finding": "SUPPLIER_MISMATCH"
-            },
-            "W-59": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-61": {
-              "finding": "compliant"
-            },
-            "W-62": {
-              "finding": "compliant"
-            },
-            "W-63": {
-              "finding": "VINTAGE_INVALID"
-            },
-            "W-64": {
-              "finding": "compliant"
-            },
-            "W-65": {
-              "finding": "SUPPLIER_MISMATCH"
-            },
-            "W-66": {
-              "finding": "compliant"
-            },
-            "W-67": {
-              "finding": "compliant"
-            },
-            "W-68": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-69": {
-              "finding": "compliant"
-            },
-            "W-70": {
-              "finding": "compliant"
-            },
-            "W-71": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-72": {
-              "finding": "MARGIN_TOO_LOW|VINTAGE_INVALID"
-            },
-            "W-73": {
-              "finding": "compliant"
-            },
-            "W-74": {
-              "finding": "compliant"
-            },
-            "W-75": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-76": {
-              "finding": "compliant"
-            },
-            "W-77": {
-              "finding": "compliant"
-            },
-            "W-78": {
-              "finding": "compliant"
-            },
-            "W-79": {
-              "finding": "compliant"
-            },
-            "W-80": {
-              "finding": "compliant"
-            },
-            "W-81": {
-              "finding": "compliant"
-            },
-            "W-82": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-83": {
-              "finding": "compliant"
-            },
-            "W-84": {
-              "finding": "compliant"
-            },
-            "W-85": {
-              "finding": "compliant"
-            },
-            "W-86": {
-              "finding": "compliant"
-            },
-            "W-87": {
-              "finding": "compliant"
-            },
-            "W-88": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-89": {
-              "finding": "compliant"
-            },
-            "W-90": {
-              "finding": "compliant"
-            },
-            "W-91": {
-              "finding": "compliant"
-            },
-            "W-92": {
-              "finding": "compliant"
-            },
-            "W-93": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-94": {
-              "finding": "compliant"
-            },
-            "W-95": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-96": {
-              "finding": "compliant"
-            },
-            "W-97": {
-              "finding": "compliant"
-            },
-            "W-98": {
-              "finding": "compliant"
-            },
-            "W-99": {
-              "finding": "SUPPLIER_MISMATCH"
-            },
-            "W-100": {
-              "finding": "VINTAGE_INVALID"
-            },
-            "W-101": {
-              "finding": "MARGIN_TOO_LOW|VINTAGE_INVALID"
-            },
-            "W-102": {
-              "finding": "compliant"
-            },
-            "W-103": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-104": {
-              "finding": "VINTAGE_INVALID"
-            },
-            "W-105": {
-              "finding": "compliant"
-            },
-            "W-106": {
-              "finding": "compliant"
-            },
-            "W-107": {
-              "finding": "compliant"
-            },
-            "W-108": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-109": {
-              "finding": "compliant"
-            },
-            "W-110": {
-              "finding": "compliant"
-            },
-            "W-111": {
-              "finding": "compliant"
-            },
-            "W-112": {
-              "finding": "VINTAGE_INVALID"
-            },
-            "W-113": {
-              "finding": "compliant"
-            },
-            "W-114": {
-              "finding": "compliant"
-            },
-            "W-115": {
-              "finding": "compliant"
-            },
-            "W-116": {
-              "finding": "VINTAGE_INVALID"
-            },
-            "W-117": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-118": {
-              "finding": "compliant"
-            },
-            "W-119": {
-              "finding": "compliant"
-            },
-            "W-120": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-121": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-122": {
-              "finding": "compliant"
-            },
-            "W-133": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-123": {
-              "finding": "compliant"
-            },
-            "W-124": {
-              "finding": "MARGIN_TOO_LOW"
-            },
-            "W-125": {
-              "finding": "compliant"
-            },
-            "W-126": {
-              "finding": "SUPPLIER_MISMATCH"
-            },
-            "W-127": {
-              "finding": "SUPPLIER_MISMATCH"
-            },
-            "W-128": {
-              "finding": "compliant"
-            },
-            "W-131": {
-              "finding": "SUPPLIER_MISMATCH"
-            },
-            "W-132": {
-              "finding": "SUPPLIER_MISMATCH"
-            },
-            "W-60": {
               "finding": "compliant"
             }
           },
@@ -538,102 +253,7 @@
             "W-33",
             "W-34",
             "W-35",
-            "W-36",
-            "W-37",
-            "W-38",
-            "W-39",
-            "W-40",
-            "W-41",
-            "W-42",
-            "W-43",
-            "W-44",
-            "W-45",
-            "W-46",
-            "W-47",
-            "W-48",
-            "W-49",
-            "W-50",
-            "W-51",
-            "W-52",
-            "W-53",
-            "W-54",
-            "W-55",
-            "W-56",
-            "W-57",
-            "W-58",
-            "W-59",
-            "W-61",
-            "W-62",
-            "W-63",
-            "W-64",
-            "W-65",
-            "W-66",
-            "W-67",
-            "W-68",
-            "W-69",
-            "W-70",
-            "W-71",
-            "W-72",
-            "W-73",
-            "W-74",
-            "W-75",
-            "W-76",
-            "W-77",
-            "W-78",
-            "W-79",
-            "W-80",
-            "W-81",
-            "W-82",
-            "W-83",
-            "W-84",
-            "W-85",
-            "W-86",
-            "W-87",
-            "W-88",
-            "W-89",
-            "W-90",
-            "W-91",
-            "W-92",
-            "W-93",
-            "W-94",
-            "W-95",
-            "W-96",
-            "W-97",
-            "W-98",
-            "W-99",
-            "W-100",
-            "W-101",
-            "W-102",
-            "W-103",
-            "W-104",
-            "W-105",
-            "W-106",
-            "W-107",
-            "W-108",
-            "W-109",
-            "W-110",
-            "W-111",
-            "W-112",
-            "W-113",
-            "W-114",
-            "W-115",
-            "W-116",
-            "W-117",
-            "W-118",
-            "W-119",
-            "W-120",
-            "W-121",
-            "W-122",
-            "W-133",
-            "W-123",
-            "W-124",
-            "W-125",
-            "W-126",
-            "W-127",
-            "W-128",
-            "W-131",
-            "W-132",
-            "W-60"
+            "W-36"
           ],
           "columns": [
             "wine_id",
@@ -653,7 +273,7 @@
       "name": "memo_exists",
       "metadata": {
         "how_justification": "Checks wine_memo.md is present as a file in the workspace.",
-        "why_justification": "The memo is delivered. Entailed by: \"`wine_memo.md` explaining each finding and calling out the wines a plain margin check would flag that the policy does not\"",
+        "why_justification": "The memo is delivered. Entailed by: \"`wine_memo.md` explaining each finding and calling out the wines whose realized margin is under the minimum but which the policy still leaves compliant\"",
         "tag": "core"
       },
       "source": {
@@ -695,7 +315,7 @@
       },
       "assertion": {
         "type": "deterministic",
-        "expected": "(?s)(?=.*\\bW\\-03\\b)(?=.*\\bW\\-04\\b)(?=.*\\bW\\-07\\b)(?=.*\\bW\\-10\\b)(?=.*\\bW\\-13\\b)(?=.*\\bW\\-14\\b)(?=.*\\bW\\-15\\b)(?=.*\\bW\\-16\\b)(?=.*\\bW\\-19\\b)(?=.*\\bW\\-20\\b)(?=.*\\bW\\-21\\b)(?=.*\\bW\\-22\\b)(?=.*\\bW\\-23\\b)(?=.*\\bW\\-25\\b)(?=.*\\bW\\-28\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-32\\b)(?=.*\\bW\\-35\\b)(?=.*\\bW\\-36\\b)(?=.*\\bW\\-38\\b)(?=.*\\bW\\-40\\b)(?=.*\\bW\\-41\\b)(?=.*\\bW\\-42\\b)(?=.*\\bW\\-43\\b)(?=.*\\bW\\-45\\b)(?=.*\\bW\\-46\\b)(?=.*\\bW\\-47\\b)(?=.*\\bW\\-48\\b)(?=.*\\bW\\-50\\b)(?=.*\\bW\\-51\\b)(?=.*\\bW\\-54\\b)(?=.*\\bW\\-57\\b)(?=.*\\bW\\-58\\b)(?=.*\\bW\\-59\\b)(?=.*\\bW\\-63\\b)(?=.*\\bW\\-65\\b)(?=.*\\bW\\-68\\b)(?=.*\\bW\\-71\\b)(?=.*\\bW\\-72\\b)(?=.*\\bW\\-75\\b)(?=.*\\bW\\-82\\b)(?=.*\\bW\\-88\\b)(?=.*\\bW\\-93\\b)(?=.*\\bW\\-95\\b)(?=.*\\bW\\-99\\b)(?=.*\\bW\\-100\\b)(?=.*\\bW\\-101\\b)(?=.*\\bW\\-103\\b)(?=.*\\bW\\-104\\b)(?=.*\\bW\\-108\\b)(?=.*\\bW\\-112\\b)(?=.*\\bW\\-116\\b)(?=.*\\bW\\-117\\b)(?=.*\\bW\\-120\\b)(?=.*\\bW\\-121\\b)(?=.*\\bW\\-133\\b)(?=.*\\bW\\-124\\b)(?=.*\\bW\\-126\\b)(?=.*\\bW\\-127\\b)(?=.*\\bW\\-131\\b)(?=.*\\bW\\-132\\b)",
+        "expected": "(?s)(?=.*\\bW\\-04\\b)(?=.*\\bW\\-05\\b)(?=.*\\bW\\-06\\b)(?=.*\\bW\\-11\\b)(?=.*\\bW\\-13\\b)(?=.*\\bW\\-14\\b)(?=.*\\bW\\-15\\b)(?=.*\\bW\\-16\\b)(?=.*\\bW\\-17\\b)(?=.*\\bW\\-19\\b)(?=.*\\bW\\-24\\b)(?=.*\\bW\\-25\\b)(?=.*\\bW\\-30\\b)(?=.*\\bW\\-31\\b)(?=.*\\bW\\-32\\b)(?=.*\\bW\\-34\\b)(?=.*\\bW\\-35\\b)",
         "deterministic": {
           "path": "$.text",
           "comparison": "regex_match"
@@ -706,7 +326,7 @@
       "name": "memo_names_trap",
       "metadata": {
         "how_justification": "Opens wine_memo.md with md.extract_text and applies a regex_match of look-aheads, one per exempt low-margin wine id, anywhere in the text; no wording or ordering is required.",
-        "why_justification": "The memo names the wines a plain margin check would flag that the policy does not. Entailed by: \"name every wine whose margin is below its minimum but which the policy leaves compliant\"",
+        "why_justification": "The memo names the wines under their minimum that the policy leaves compliant. Entailed by: \"name every wine whose realized margin is below its minimum but which the policy leaves compliant\"",
         "tag": "incidental",
         "weight": 0.05
       },
@@ -722,7 +342,7 @@
       },
       "assertion": {
         "type": "deterministic",
-        "expected": "(?s)(?=.*\\bW\\-02\\b)(?=.*\\bW\\-17\\b)(?=.*\\bW\\-29\\b)(?=.*\\bW\\-30\\b)",
+        "expected": "(?s)(?=.*\\bW\\-02\\b)(?=.*\\bW\\-27\\b)(?=.*\\bW\\-34\\b)",
         "deterministic": {
           "path": "$.text",
           "comparison": "regex_match"
@@ -760,7 +380,7 @@
       "name": "results_exists",
       "metadata": {
         "how_justification": "Checks results.json is present as a file in the workspace.",
-        "why_justification": "Derived figures delivered. Entailed by: \"`results.json` \u2014 a JSON object with the keys `wine_count`, `margin_too_low_count`, `vintage_invalid_count`, `supplier_mismatch_count`, `compliant_count`, `margin_shortfall_total`\"",
+        "why_justification": "Derived figures delivered. Entailed by: \"`results.json` \u2014 a JSON object with the keys `wine_count`, `margin_too_low_count`, `vintage_invalid_count`, `supplier_mismatch_count`, `compliant_count`, `margin_shortfall_total`, `cost_of_bottles_sold_total`\"",
         "tag": "core"
       },
       "source": {
@@ -786,7 +406,7 @@
       "name": "results_figures",
       "metadata": {
         "how_justification": "Reads results.json with json.read_file and applies object_equals to every key with the key set closed; a failure names the key.",
-        "why_justification": "The five counts and the shortfall total are the dashboard's headline figures; each is recomputable from the findings sheet and the governing purchase lines. Entailed by: \"A JSON object with exactly these keys and nothing else\"",
+        "why_justification": "The five counts, the shortfall total and the cost of bottles sold total are the review's headline figures; each is recomputable from the findings and the FIFO costing the policy defines. Entailed by: \"A JSON object with exactly these keys and nothing else\"",
         "tag": "core"
       },
       "source": {
@@ -804,27 +424,31 @@
         "expected": {
           "keys": {
             "wine_count": {
-              "value": 131,
+              "value": 36,
               "tolerance": null
             },
             "margin_too_low_count": {
-              "value": 39,
+              "value": 12,
               "tolerance": null
             },
             "vintage_invalid_count": {
-              "value": 15,
+              "value": 4,
               "tolerance": null
             },
             "supplier_mismatch_count": {
-              "value": 13,
+              "value": 3,
               "tolerance": null
             },
             "compliant_count": {
-              "value": 70,
+              "value": 19,
               "tolerance": null
             },
             "margin_shortfall_total": {
-              "value": 28.84,
+              "value": 570.4,
+              "tolerance": 0.01
+            },
+            "cost_of_bottles_sold_total": {
+              "value": 83892.03,
               "tolerance": 0.01
             }
           },
