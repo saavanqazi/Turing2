@@ -1,0 +1,13 @@
+sku,supplier_part,description,connector,polarized,length,conductor_awg,rating,price_usd
+PC-1008,VLX-F8-08,"Figure-8 AC power cord, 8 ft",C7,N,8 ft,18,2.5 A / 125 V,10.99
+PC-1010,VLX-F8-10,"Figure-8 AC power cord, 10 ft",C7,N,10 ft,18,2.5 A / 125 V,14.49
+PC-1012,VLX-F8-12,"Figure-8 AC power cord, 12 ft",C7,N,12 ft,18,2.5 A / 125 V,17.00
+PC-1015,VLX-F8-15,"Figure-8 AC power cord, 15 ft",C7,N,15 ft,18,2.5 A / 125 V,21.99
+PC-1020,VLX-F8-20,"Figure-8 AC power cord, 20 ft",C7,N,20 ft,18,2.5 A / 125 V,25.99
+PC-2010,VLX-F8P-10,"Figure-8 AC power cord, polarized, 10 ft",C7,Y,10 ft,18,2.5 A / 125 V,12.99
+PC-3006,VLX-F8S-06,"Figure-8 AC power cord, slimline, 6 ft",C7,N,6 ft,20,2.5 A / 125 V,8.49
+PC-3008,VLX-F8S-08,"Figure-8 AC power cord, slimline, 8 ft",C7,N,8 ft,20,2.5 A / 125 V,9.99
+PC-3010,VLX-F8S-10,"Figure-8 AC power cord, slimline, 10 ft",C7,N,10 ft,20,2.5 A / 125 V,11.49
+PC-5010,VLX-C5-10,"Cloverleaf AC power cord, 10 ft",C5,N,10 ft,18,2.5 A / 125 V,13.99
+PC-4030,VLX-F8-3M0,"Figure-8 AC power cord, 3.0 m (EU import)",C7,N,3.0 m,18,2.5 A / 250 V,12.50
+PC-4037,VLX-F8-3M7,"Figure-8 AC power cord, 3.7 m (EU import)",C7,N,3.7 m,18,2.5 A / 250 V,16.97

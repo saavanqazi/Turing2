@@ -1,0 +1,8 @@
+store_id,store_name,city,state,timezone,distance_mi,same_day_suspended,sales_tax_pct,effective_from
+ST-08,Kestrel Columbus,Columbus,GA,America/New_York,3.4,N,8.00,2025-01-01
+ST-17,Kestrel Auburn,Auburn,AL,America/Chicago,29.1,N,9.00,2025-01-01
+ST-23,Kestrel Opelika,Opelika,AL,America/Chicago,26.5,N,9.50,2026-09-01
+ST-23,Kestrel Opelika,Opelika,AL,America/Chicago,26.5,N,9.00,2025-01-01
+ST-31,Kestrel Columbus Midtown,Columbus,GA,America/New_York,5.1,Y,8.00,2025-01-01
+ST-44,Kestrel Phenix City,Phenix City,AL,America/Chicago,1.2,N,9.75,2025-01-01
+ST-52,Kestrel Smiths Station,Smiths Station,AL,America/Chicago,7.8,N,9.50,2026-03-15
