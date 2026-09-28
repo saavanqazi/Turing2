@@ -18,6 +18,7 @@ from __future__ import annotations
 import csv
 import io
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -43,11 +44,11 @@ def score(rows, results):
     w = csv.DictWriter(buf, fieldnames=["offer_id", "decision", "reason_code", "landed_cost_usd"], lineterminator="\n")
     w.writeheader()
     w.writerows(rows)
-    (ws / "offer_evaluation.csv").write_text(buf.getvalue(), encoding="utf-8")
-    (ws / "results.json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
+    (ws / "offer_evaluation.csv").write_text(buf.getvalue(), encoding="utf-8", newline="\n")
+    (ws / "results.json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8", newline="\n")
     proc = subprocess.run([sys.executable, str(TASK / "tests" / "score.py")],
-                          env={"HARBOR_TASK_WORKSPACE": str(ws), "HARBOR_AGENT_LOGS_DIR": str(ws / "none"),
-                               "PATH": "/usr/local/bin:/usr/bin:/bin"},
+                          env={**os.environ, "HARBOR_TASK_WORKSPACE": str(ws),
+                               "HARBOR_AGENT_LOGS_DIR": str(ws / "none")},
                           capture_output=True, text=True)
     shutil.rmtree(ws, ignore_errors=True)
     d = json.loads(proc.stdout)

@@ -159,11 +159,11 @@ def main() -> int:
     FILES.mkdir(parents=True, exist_ok=True)
     header = ["offer_id", "decision", "reason_code", "landed_cost_usd"]
     csv_text = ",".join(header) + "\n" + "".join(",".join(r[h] for h in header) + "\n" for r in out)
-    (FILES / "offer_evaluation.csv").write_text(csv_text, encoding="utf-8")
+    (FILES / "offer_evaluation.csv").write_text(csv_text, encoding="utf-8", newline="\n")
     results = {"eligible_offer_count": len(eligible), "chosen_offer_id": chosen,
                "chosen_total_usd": float(chosen_cost)}
     json_text = json.dumps(results, indent=2) + "\n"
-    (FILES / "results.json").write_text(json_text, encoding="utf-8")
+    (FILES / "results.json").write_text(json_text, encoding="utf-8", newline="\n")
 
     # ---- golden trajectory (heredoc replay) ---------------------------------------
     reads = ["cord_catalogue.csv", "power_supply_spec.md", "same_day_offers.csv", "stock_ledger.csv",
@@ -175,7 +175,7 @@ def main() -> int:
     steps.append({"name": "bash", "server": "local", "arguments": {
         "command": "cat > results.json << 'RESULTSEOF'\n" + json_text + "RESULTSEOF"}})
     steps.append({"name": "bash", "server": "local", "arguments": {"command": "ls -la offer_evaluation.csv results.json"}})
-    (TASK / "solution" / "golden_trajectory.json").write_text(json.dumps(steps, indent=2) + "\n", encoding="utf-8")
+    (TASK / "solution" / "golden_trajectory.json").write_text(json.dumps(steps, indent=2) + "\n", encoding="utf-8", newline="\n")
 
     # ---- verifier expected values -------------------------------------------------
     spec = json.loads(SPEC_PATH.read_text(encoding="utf-8"))
@@ -197,8 +197,8 @@ def main() -> int:
             exp["keys"]["chosen_offer_id"]["value"] = chosen
             exp["keys"]["chosen_total_usd"]["value"] = float(chosen_cost)
     text = json.dumps(spec, indent=2) + "\n"
-    SPEC_PATH.write_text(text, encoding="utf-8")
-    MIRROR_PATH.write_text(text, encoding="utf-8")
+    SPEC_PATH.write_text(text, encoding="utf-8", newline="\n")
+    MIRROR_PATH.write_text(text, encoding="utf-8", newline="\n")
     print(f"\nwrote {FILES}, golden_trajectory.json, {SPEC_PATH.name} + {MIRROR_PATH.name} (identical)")
     return 0
 
