@@ -8,9 +8,9 @@ Deliver exactly these files, in your working directory:
 ## `offer_evaluation.csv`
 
 Header, exactly: `offer_id,decision,reason_code,landed_cost_usd`
-One row per record, keyed by `offer_id`.
+One row per offer, keyed by `offer_id`.
 `decision` takes exactly one of: `ELIGIBLE`, `INELIGIBLE`.
-One row per offer in `same_day_offers.csv`, in any order, with `offer_id` as that file writes it: `decision` is `ELIGIBLE` or `INELIGIBLE`, `reason_code` is the first clause of the terms that refuses the offer and `NONE` for an offer nothing refuses, and `landed_cost_usd` is what the buyer pays for an eligible offer, in US dollars to the cent, and is left empty on an offer that is not eligible.
+One row per offer in `same_day_offers.csv`, in any order, with `offer_id` as that file writes it; each distinct `offer_id` appears in the sheet exactly once: `decision` is `ELIGIBLE` or `INELIGIBLE`, `reason_code` is the refusal that the precedence order in S5 of the terms ranks first among every clause the offer fails (S5's order, not the order the clauses appear in the terms) and `NONE` for an offer nothing refuses, and `landed_cost_usd` is what the buyer pays for an eligible offer, in US dollars to the cent, and is left empty on an offer that is not eligible.
 `reason_code` takes exactly one of: `FIT_CONNECTOR`, `FIT_POLARIZED`, `FIT_GAUGE`, `FIT_LENGTH`, `NO_STOCK`, `STOCK_RESERVE`, `SAME_DAY_SUSPENDED`, `CUTOFF_PASSED`, `OUT_OF_RADIUS`, `NONE`.
 Write `landed_cost_usd` as plain numbers: no thousands separators, no currency symbols, and no more decimal places than the source data carries (`6` or `6.0`, never `6,000` or `$6`).
 
@@ -39,4 +39,4 @@ Shape example (placeholder values):
 }
 ```
 
-`eligible_offer_count` is the number of offers the terms leave eligible; `chosen_offer_id` is the `offer_id` of the eligible offer the terms say to take; `chosen_total_usd` is that offer's landed cost in US dollars to the cent.
+`eligible_offer_count` is the number of distinct offers (counted by `offer_id`) the terms leave eligible; `chosen_offer_id` is the `offer_id` of the eligible offer the terms say to take; `chosen_total_usd` is that offer's landed cost in US dollars to the cent.

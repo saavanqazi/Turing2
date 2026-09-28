@@ -77,7 +77,7 @@ def cents(x: Decimal) -> Decimal:
 def main() -> int:
     cat = {r["sku"]: r for r in rows("cord_catalogue.csv")}
     seen, offers_dedup = set(), []
-    for o in rows("same_day_offers.csv"):  # an export may repeat a line; one offer = one offer_id
+    for o in rows("same_day_offers.csv"):  # submission_format.md: each distinct offer_id appears exactly once
         if o["offer_id"] not in seen:
             seen.add(o["offer_id"]); offers_dedup.append(o)
     stores = {}

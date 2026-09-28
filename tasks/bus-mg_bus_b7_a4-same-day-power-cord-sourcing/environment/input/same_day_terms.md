@@ -39,7 +39,8 @@ A store's **effective stock** in a cord is the `OPENING` count for the order dat
 every adding line, minus every removing line, for that store and that cord posted after the
 `OPENING` and at or before the store's order instant (S1). A line posted after the order
 instant on that store's clock has not happened yet and is not counted. Effective stock is
-one figure per store and cord, shared by every offer that draws on it.
+one figure per store and cord, and every offer that draws on that store and cord is judged
+against that same figure; the buyer is taking one cord, so no offer uses up another's units.
 
 Either method requires effective stock of at least 1 (`NO_STOCK` where it is not).
 
@@ -71,7 +72,8 @@ here.
 
 ## S5 — reason precedence
 
-An offer may fail more than one clause. Report the FIRST that applies, in this order:
+An offer may fail more than one clause. Report the one that comes FIRST in this order, whichever
+section of these terms states it:
 `FIT_CONNECTOR`, `FIT_POLARIZED`, `FIT_GAUGE`, `FIT_LENGTH`, `NO_STOCK`, `STOCK_RESERVE`,
 `SAME_DAY_SUSPENDED`, `CUTOFF_PASSED`, `OUT_OF_RADIUS`. An offer that fails none of them is
 eligible and its reason is `NONE`.
